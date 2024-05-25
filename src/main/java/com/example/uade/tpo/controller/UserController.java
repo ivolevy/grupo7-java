@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/usuario")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -24,15 +24,15 @@ public class UserController {
 
     @GetMapping("/{userId}") //Get user by id
     public ResponseEntity<User> getUserById(@PathVariable Long userId) {
-        Optional<User> usuario = userService.getUserById(userId);
-        return usuario.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+        Optional<User> user = userService.getUserById(userId);
+        return user.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping //Create usuario
     public ResponseEntity<User> createUser(@RequestBody User user) {
-        User usuario = userService.createUser(user);
-        return new ResponseEntity<>(usuario, HttpStatus.CREATED);
+        User user1 = userService.createUser(user);
+        return new ResponseEntity<>(user1, HttpStatus.CREATED);
     }
 
     @PutMapping("/{userId}") //Update usuario
@@ -53,7 +53,5 @@ public class UserController {
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-
 
 }

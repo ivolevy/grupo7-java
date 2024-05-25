@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "usuarios")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -19,5 +19,8 @@ public class User {
     private String email;
     @Column
     private String password;
+    @OneToOne
+    @JoinColumn(name = "seller_id")
+    private Seller seller;
 
 }
