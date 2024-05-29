@@ -19,8 +19,5 @@ public class User {
     private String email;
     @Column
     private String password;
-    @OneToOne
-    @JoinColumn(name = "seller_id")
-    private Seller seller;
 
 }

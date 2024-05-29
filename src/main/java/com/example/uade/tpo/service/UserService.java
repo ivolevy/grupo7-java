@@ -1,44 +1,50 @@
 package com.example.uade.tpo.service;
 
+import com.example.uade.tpo.dtos.request.CreateUserRequestDto;
+import com.example.uade.tpo.dtos.response.UserResponseDto;
 import com.example.uade.tpo.entity.User;
-import com.example.uade.tpo.repository.UserRepository;
+import com.example.uade.tpo.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    private IUserRepository userRepository;
 
-    public List<User> getUsuarios() {
-        return userRepository.findAll();
+    public List<UserResponseDto> getUsuarios() {
+        return userRepository.findAll().stream().map(this::convertToResponseDto).collect(Collectors.toList());
     }
 
-    public Optional<User> getUserById(Long userId) {
-        return userRepository.findById(userId);
+    public Optional<UserResponseDto> getUserById(Long userId) {
+        return userRepository.findById(userId).map(this::convertToResponseDto);
     }
 
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public UserResponseDto createUser(CreateUserRequestDto userDto) {
+        User user = new User();
+        user.setName(userDto.getName());
+        user.setLastName(userDto.getLastName());
+        user.setEmail(userDto.getEmail());
+        user.setPassword(userDto.getPassword());
+        return convertToResponseDto(userRepository.save(user));
     }
 
-    public User updateUser(Long userId, User userDetails) {
-        return userRepository.findById(userId)
-                .map(user -> {
-                    user.setName(userDetails.getName());
-                    user.setLastName(userDetails.getLastName());
-                    user.setEmail(userDetails.getEmail());
-                    user.setPassword(userDetails.getPassword());
-                    return userRepository.save(user);
-                })
-                .orElseGet(() -> {
-                    userDetails.setId(userId);
-                    return userRepository.save(userDetails);
-                });
+    public UserResponseDto updateUser(Long userId, CreateUserRequestDto userDetails) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setName(userDetails.getName());
+            user.setLastName(userDetails.getLastName());
+            user.setEmail(userDetails.getEmail());
+            user.setPassword(userDetails.getPassword());
+            return convertToResponseDto(userRepository.save(user));
+        }
+        return null;
     }
 
     public Boolean deleteUser(Long userId) {
@@ -47,6 +53,15 @@ public class UserService {
             return true;
         }
         return false;
+    }
+
+    private UserResponseDto convertToResponseDto(User user) {
+        UserResponseDto userDto = new UserResponseDto();
+        userDto.setUserId(user.getId());
+        userDto.setName(user.getName());
+        userDto.setLastName(user.getLastName());
+        userDto.setEmail(user.getEmail());
+        return userDto;
     }
 
 }
