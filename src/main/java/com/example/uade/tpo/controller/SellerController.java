@@ -1,6 +1,6 @@
 package com.example.uade.tpo.controller;
 
-import com.example.uade.tpo.dtos.request.CreateSellerRequestDto;
+import com.example.uade.tpo.dtos.request.SellerRequestDto;
 import com.example.uade.tpo.dtos.response.SellerResponseDto;
 import com.example.uade.tpo.service.SellerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,26 +18,26 @@ public class SellerController {
     @Autowired
     private SellerService sellerService;
 
-    @GetMapping("/") //Get all users
+    @GetMapping("/") //Get all sellers
     public List<SellerResponseDto> getAllSellers() {
         return sellerService.getSellers();
     }
 
-    @GetMapping("/{SellerId}") //Get user by id
+    @GetMapping("/{SellerId}") //Get seller by id
     public ResponseEntity<SellerResponseDto> getSellersById(@PathVariable Long SellerId) {
         Optional<SellerResponseDto> seller = sellerService.getSellerById(SellerId);
         return seller.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping //Create usuario
-    public ResponseEntity<SellerResponseDto> createSeller(@RequestBody CreateSellerRequestDto sellerDto) {
+    @PostMapping //Create seller
+    public ResponseEntity<SellerResponseDto> createSeller(@RequestBody SellerRequestDto sellerDto) {
         SellerResponseDto newSeller = sellerService.createSeller(sellerDto);
         return new ResponseEntity<>(newSeller, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{SellerId}") //Update usuario
-    public ResponseEntity<SellerResponseDto> updateSeller(@PathVariable Long SellerId, @RequestBody CreateSellerRequestDto sellerDetails) {
+    @PutMapping("/{SellerId}") //Update seller
+    public ResponseEntity<SellerResponseDto> updateSeller(@PathVariable Long SellerId, @RequestBody SellerRequestDto sellerDetails) {
         SellerResponseDto updatedSeller = sellerService.updateSeller(SellerId, sellerDetails);
         if (updatedSeller == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -45,7 +45,7 @@ public class SellerController {
         return new ResponseEntity<>(updatedSeller, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{SellerId}") //Delete usuario
+    @DeleteMapping("/{SellerId}") //Delete seller
     public ResponseEntity<Void> deleteSeller(@PathVariable Long SellerId) {
         Boolean deleted = sellerService.deleteSeller(SellerId);
         if (!deleted) {

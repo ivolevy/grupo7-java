@@ -20,4 +20,6 @@ public class Product {
     private Integer stock;
     @Column(name = "seller_id", nullable = false)
     private Long sellerId;
+    @Column
+    private String image;
 }

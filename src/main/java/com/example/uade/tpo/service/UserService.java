@@ -1,6 +1,7 @@
 package com.example.uade.tpo.service;
 
-import com.example.uade.tpo.dtos.request.CreateUserRequestDto;
+import com.example.uade.tpo.Utils.Mapper;
+import com.example.uade.tpo.dtos.request.UserRequestDto;
 import com.example.uade.tpo.dtos.response.UserResponseDto;
 import com.example.uade.tpo.entity.User;
 import com.example.uade.tpo.repository.IUserRepository;
@@ -18,23 +19,23 @@ public class UserService {
     private IUserRepository userRepository;
 
     public List<UserResponseDto> getUsuarios() {
-        return userRepository.findAll().stream().map(this::convertToResponseDto).collect(Collectors.toList());
+        return userRepository.findAll().stream().map(Mapper::convertToUserResponseDto).collect(Collectors.toList());
     }
 
     public Optional<UserResponseDto> getUserById(Long userId) {
-        return userRepository.findById(userId).map(this::convertToResponseDto);
+        return userRepository.findById(userId).map(Mapper::convertToUserResponseDto);
     }
 
-    public UserResponseDto createUser(CreateUserRequestDto userDto) {
+    public UserResponseDto createUser(UserRequestDto userDto) {
         User user = new User();
         user.setName(userDto.getName());
         user.setLastName(userDto.getLastName());
         user.setEmail(userDto.getEmail());
         user.setPassword(userDto.getPassword());
-        return convertToResponseDto(userRepository.save(user));
+        return Mapper.convertToUserResponseDto(userRepository.save(user));
     }
 
-    public UserResponseDto updateUser(Long userId, CreateUserRequestDto userDetails) {
+    public UserResponseDto updateUser(Long userId, UserRequestDto userDetails) {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -42,7 +43,7 @@ public class UserService {
             user.setLastName(userDetails.getLastName());
             user.setEmail(userDetails.getEmail());
             user.setPassword(userDetails.getPassword());
-            return convertToResponseDto(userRepository.save(user));
+            return Mapper.convertToUserResponseDto(userRepository.save(user));
         }
         return null;
     }
@@ -53,15 +54,6 @@ public class UserService {
             return true;
         }
         return false;
-    }
-
-    private UserResponseDto convertToResponseDto(User user) {
-        UserResponseDto userDto = new UserResponseDto();
-        userDto.setUserId(user.getId());
-        userDto.setName(user.getName());
-        userDto.setLastName(user.getLastName());
-        userDto.setEmail(user.getEmail());
-        return userDto;
     }
 
 }

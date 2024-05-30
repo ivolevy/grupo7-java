@@ -1,6 +1,6 @@
 package com.example.uade.tpo.controller;
 
-import com.example.uade.tpo.dtos.request.CreateUserRequestDto;
+import com.example.uade.tpo.dtos.request.UserRequestDto;
 import com.example.uade.tpo.dtos.response.UserResponseDto;
 import com.example.uade.tpo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +30,14 @@ public class UserController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping //Create usuario
-    public ResponseEntity<UserResponseDto> createUser(@RequestBody CreateUserRequestDto userDto) {
+    @PostMapping //Create user
+    public ResponseEntity<UserResponseDto> createUser(@RequestBody UserRequestDto userDto) {
         UserResponseDto newUser = userService.createUser(userDto);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{userId}") //Update usuario
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long userId, @RequestBody CreateUserRequestDto userDetails) {
+    @PutMapping("/{userId}") //Update user
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long userId, @RequestBody UserRequestDto userDetails) {
         UserResponseDto updatedUser = userService.updateUser(userId, userDetails);
         if (updatedUser == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -45,7 +45,7 @@ public class UserController {
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{userId}") //Delete usuario
+    @DeleteMapping("/{userId}") //Delete user
     public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
         Boolean deleted = userService.deleteUser(userId);
         if (!deleted) {

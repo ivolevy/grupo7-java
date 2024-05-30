@@ -1,6 +1,5 @@
 package com.example.uade.tpo.dtos.request;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,9 +8,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreateSellerRequestDto {
-    Long userId;
-    String storeName;
-    String address;
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
+public class CategoryRequestDto {
+    String name;
 }

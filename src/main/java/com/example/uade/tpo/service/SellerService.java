@@ -1,6 +1,7 @@
 package com.example.uade.tpo.service;
 
-import com.example.uade.tpo.dtos.request.CreateSellerRequestDto;
+import com.example.uade.tpo.Utils.Mapper;
+import com.example.uade.tpo.dtos.request.SellerRequestDto;
 import com.example.uade.tpo.dtos.response.SellerResponseDto;
 import com.example.uade.tpo.entity.Seller;
 import com.example.uade.tpo.repository.ISellerRepository;
@@ -18,29 +19,29 @@ public class SellerService {
     ISellerRepository sellerRepository;
 
     public List<SellerResponseDto> getSellers() {
-        return sellerRepository.findAll().stream().map(this::convertToResponseDto).collect(Collectors.toList());
+        return sellerRepository.findAll().stream().map(Mapper::convertToSellerResponseDto).collect(Collectors.toList());
     }
 
     public Optional<SellerResponseDto> getSellerById(Long sellerId) {
-        return sellerRepository.findById(sellerId).map(this::convertToResponseDto);
+        return sellerRepository.findById(sellerId).map(Mapper::convertToSellerResponseDto);
     }
 
-    public SellerResponseDto createSeller(CreateSellerRequestDto sellerDto) {
+    public SellerResponseDto createSeller(SellerRequestDto sellerDto) {
         Seller seller = new Seller();
         seller.setUserId(sellerDto.getUserId());
         seller.setStoreName(sellerDto.getStoreName());
         seller.setAddress(sellerDto.getAddress());
-        return convertToResponseDto(sellerRepository.save(seller));
+        return Mapper.convertToSellerResponseDto(sellerRepository.save(seller));
     }
 
-    public SellerResponseDto updateSeller(Long sellerId, CreateSellerRequestDto sellerDetails) {
+    public SellerResponseDto updateSeller(Long sellerId, SellerRequestDto sellerDetails) {
         Optional<Seller> sellerOptional = sellerRepository.findById(sellerId);
         if (sellerOptional.isPresent()) {
             Seller seller = sellerOptional.get();
             seller.setUserId(sellerDetails.getUserId());
             seller.setStoreName(sellerDetails.getStoreName());
             seller.setAddress(sellerDetails.getAddress());
-            return convertToResponseDto(sellerRepository.save(seller));
+            return Mapper.convertToSellerResponseDto(sellerRepository.save(seller));
         }
         return null;
     }
@@ -51,14 +52,5 @@ public class SellerService {
             return true;
         }
         return false;
-    }
-
-    private SellerResponseDto convertToResponseDto(Seller seller) {
-        SellerResponseDto sellerDto = new SellerResponseDto();
-        sellerDto.setSellerId(seller.getId());
-        sellerDto.setUserId(seller.getUserId());
-        sellerDto.setStoreName(seller.getStoreName());
-        sellerDto.setAddress(seller.getAddress());
-        return sellerDto;
     }
 }
