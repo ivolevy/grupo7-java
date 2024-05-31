@@ -10,7 +10,8 @@ import java.util.Date;
 @Table(name = "discounts")
 public class Discounts {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "discounts_seq")
+    @SequenceGenerator(name = "discounts_seq", sequenceName = "discounts_seq", allocationSize = 1)
     private Long id;
     @Column
     private String code;
