@@ -8,11 +8,11 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "discounts")
-public class Discounts {
+public class Discount {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "discounts_seq")
     @SequenceGenerator(name = "discounts_seq", sequenceName = "discounts_seq", allocationSize = 1)
-    private Long id;
+    private Long discountId;
     @Column
     private String code;
     @Column

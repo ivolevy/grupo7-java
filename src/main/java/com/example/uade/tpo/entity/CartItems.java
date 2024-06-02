@@ -10,7 +10,7 @@ public class CartItems {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cart_items_seq")
     @SequenceGenerator(name = "cart_items_seq", sequenceName = "cart_items_seq", allocationSize = 1)
-    private Long id;
+    private Long cartItemsId;
     @Column(name = "cart_id")
     private Long cartId;
     @Column(name = "product_id")

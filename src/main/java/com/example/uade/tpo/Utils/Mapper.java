@@ -7,7 +7,7 @@ public class Mapper {
 
     public static ProductResponseDto convertToProductResponseDto(Product product) {
         ProductResponseDto productDto = new ProductResponseDto();
-        productDto.setId(product.getId());
+        productDto.setProductId(product.getId());
         productDto.setName(product.getName());
         productDto.setDescription(product.getDescription());
         productDto.setPrice(product.getPrice());
@@ -37,14 +37,14 @@ public class Mapper {
 
     public static CategoryResponseDto convertToCategoryResponseDto(Category category) {
         CategoryResponseDto categoryDto = new CategoryResponseDto();
-        categoryDto.setId(category.getId());
+        categoryDto.setCategoryId(category.getId());
         categoryDto.setName(category.getName());
         return categoryDto;
     }
 
     public static PaymentResponseDto convertToPaymentResponseDto(Payment payment) {
         PaymentResponseDto paymentDto = new PaymentResponseDto();
-        paymentDto.setId(payment.getId());
+        paymentDto.setPaymentId(payment.getId());
         paymentDto.setOrderId(payment.getOrderId());
         paymentDto.setAmount(payment.getPaymentAmount());
         paymentDto.setPaymentMethodId(payment.getPaymentMethodId());
@@ -55,12 +55,23 @@ public class Mapper {
 
     public static OrderResponseDto convertToOrderResponseDto(Order order) {
         OrderResponseDto orderDto = new OrderResponseDto();
-        orderDto.setId(order.getId());
+        orderDto.setOrderId(order.getId());
         orderDto.setUserId(order.getUserId());
         orderDto.setQuantity(order.getQuantity());
         orderDto.setOrderDate(order.getOrderDate());
         orderDto.setStatus(order.getStatus());
         return orderDto;
+    }
+
+    public static OrderDetailResponseDto convertToOrderDetailResponseDto(OrderDetail orderDetail) {
+        OrderDetailResponseDto orderDetailDto = new OrderDetailResponseDto();
+        orderDetailDto.setOrderDetailId(orderDetail.getId());
+        orderDetailDto.setOrderId(orderDetail.getOrderId());
+        orderDetailDto.setProductId(orderDetail.getProductId());
+        orderDetailDto.setQuantity(orderDetail.getQuantity());
+        orderDetailDto.setPrice(orderDetail.getPrice());
+        orderDetailDto.setTotal(orderDetail.getTotal());
+        return orderDetailDto;
     }
 
 }

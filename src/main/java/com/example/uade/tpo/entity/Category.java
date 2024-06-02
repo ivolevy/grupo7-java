@@ -10,7 +10,7 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "categories_seq")
     @SequenceGenerator(name = "categories_seq", sequenceName = "categories_seq", allocationSize = 1)
-    private Long id;
+    private Long categoryId;
     @Column(nullable = false)
     private String name;
 }
