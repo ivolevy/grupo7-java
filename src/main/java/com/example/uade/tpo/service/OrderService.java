@@ -3,6 +3,8 @@ package com.example.uade.tpo.service;
 import com.example.uade.tpo.Utils.Mapper;
 import com.example.uade.tpo.dtos.response.OrderResponseDto;
 import com.example.uade.tpo.entity.Order;
+import com.example.uade.tpo.entity.OrderDetail;
+import com.example.uade.tpo.repository.IOrderDetailRepository;
 import com.example.uade.tpo.repository.IOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,9 @@ public class OrderService {
 
     @Autowired
     private IOrderRepository orderRepository;
+
+    @Autowired
+    private IOrderDetailRepository orderDetailRepository;
 
     public Optional<OrderResponseDto> getOrderById(Long orderId) {
         return orderRepository.findById(orderId).map(Mapper::convertToOrderResponseDto);
@@ -54,8 +59,10 @@ public class OrderService {
     }
 
     public Boolean deleteOrder(Long orderId) {
+        OrderDetail orderDetail = orderDetailRepository.findById(orderId).orElse(null);
         if (orderRepository.existsById(orderId)) {
             orderRepository.deleteById(orderId);
+            orderDetailRepository.deleteById(orderId);
             return true;
         }
         return false;
