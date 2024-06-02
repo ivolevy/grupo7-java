@@ -12,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class OrderResponseDto {
-    long id;
+    long OrderId;
     long userId;
     int quantity;
     Date orderDate;

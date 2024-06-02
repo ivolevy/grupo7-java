@@ -10,6 +10,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class CategoryResponseDto {
-    Long id;
+    Long CategoryId;
     String name;
 }

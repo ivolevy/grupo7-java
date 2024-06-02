@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class ProductResponseDto {
-    Long id;
+    Long ProductId;
     String name;
     String description;
     String brand;

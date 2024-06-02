@@ -12,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class PaymentResponseDto {
-    Long id;
+    Long PaymentId;
     Long OrderId;
     Double amount;
     Date date;
