@@ -46,7 +46,7 @@ public class ProductService {
 
         if(productDto.getCategoriesIds() != null) {
             productDto.getCategoriesIds().forEach(categoryId ->
-                    productCategoriesService.createProductCategory(savedProduct.getId(), categoryId));
+                    productCategoriesService.createProductCategory(savedProduct.getProductId(), categoryId));
         }
 
         return Mapper.convertToProductResponseDto(savedProduct);

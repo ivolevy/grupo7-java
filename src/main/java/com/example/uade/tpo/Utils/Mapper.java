@@ -7,7 +7,7 @@ public class Mapper {
 
     public static ProductResponseDto convertToProductResponseDto(Product product) {
         ProductResponseDto productDto = new ProductResponseDto();
-        productDto.setProductId(product.getId());
+        productDto.setProductId(product.getProductId());
         productDto.setName(product.getName());
         productDto.setDescription(product.getDescription());
         productDto.setPrice(product.getPrice());
@@ -19,7 +19,7 @@ public class Mapper {
 
     public static SellerResponseDto convertToSellerResponseDto(Seller seller) {
         SellerResponseDto sellerDto = new SellerResponseDto();
-        sellerDto.setSellerId(seller.getId());
+        sellerDto.setSellerId(seller.getSellerId());
         sellerDto.setUserId(seller.getUserId());
         sellerDto.setStoreName(seller.getStoreName());
         sellerDto.setAddress(seller.getAddress());
@@ -28,7 +28,7 @@ public class Mapper {
 
     public static UserResponseDto convertToUserResponseDto(User user) {
         UserResponseDto userDto = new UserResponseDto();
-        userDto.setUserId(user.getId());
+        userDto.setUserId(user.getUserId());
         userDto.setName(user.getName());
         userDto.setLastName(user.getLastName());
         userDto.setEmail(user.getEmail());
@@ -37,14 +37,14 @@ public class Mapper {
 
     public static CategoryResponseDto convertToCategoryResponseDto(Category category) {
         CategoryResponseDto categoryDto = new CategoryResponseDto();
-        categoryDto.setCategoryId(category.getId());
+        categoryDto.setCategoryId(category.getCategoryId());
         categoryDto.setName(category.getName());
         return categoryDto;
     }
 
     public static PaymentResponseDto convertToPaymentResponseDto(Payment payment) {
         PaymentResponseDto paymentDto = new PaymentResponseDto();
-        paymentDto.setPaymentId(payment.getId());
+        paymentDto.setPaymentId(payment.getPaymentId());
         paymentDto.setOrderId(payment.getOrderId());
         paymentDto.setAmount(payment.getPaymentAmount());
         paymentDto.setPaymentMethodId(payment.getPaymentMethodId());
@@ -55,7 +55,7 @@ public class Mapper {
 
     public static OrderResponseDto convertToOrderResponseDto(Order order) {
         OrderResponseDto orderDto = new OrderResponseDto();
-        orderDto.setOrderId(order.getId());
+        orderDto.setOrderId(order.getOrderId());
         orderDto.setUserId(order.getUserId());
         orderDto.setQuantity(order.getQuantity());
         orderDto.setOrderDate(order.getOrderDate());
@@ -65,7 +65,7 @@ public class Mapper {
 
     public static OrderDetailResponseDto convertToOrderDetailResponseDto(OrderDetail orderDetail) {
         OrderDetailResponseDto orderDetailDto = new OrderDetailResponseDto();
-        orderDetailDto.setOrderDetailId(orderDetail.getId());
+        orderDetailDto.setOrderDetailId(orderDetail.getOrderDetailId());
         orderDetailDto.setOrderId(orderDetail.getOrderId());
         orderDetailDto.setProductId(orderDetail.getProductId());
         orderDetailDto.setQuantity(orderDetail.getQuantity());

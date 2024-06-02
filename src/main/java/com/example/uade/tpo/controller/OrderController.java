@@ -17,14 +17,14 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @GetMapping("/{oderId}")
+    @GetMapping("/{oderId}") //Get order by id
     public ResponseEntity<OrderResponseDto> getOrderById(@PathVariable Long orderId) {
         Optional<OrderResponseDto> order = orderService.getOrderById(orderId);
         return order.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("{userId}")
+    @GetMapping("{userId}") //Get orders by user id
     public ResponseEntity<List<OrderResponseDto>> getOrdersByUserId(@PathVariable Long userId) {
         List<OrderResponseDto> orders = orderService.getOrderByUserId(userId);
         if(orders.isEmpty()){
@@ -33,13 +33,13 @@ public class OrderController {
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping //Create order
     public ResponseEntity<OrderResponseDto> createOrder(@RequestBody OrderResponseDto orderDto) {
         OrderResponseDto newOrder = orderService.createOrder(orderDto);
         return new ResponseEntity<>(newOrder, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{orderId}")
+    @PutMapping("/{orderId}") //Update order
     public ResponseEntity<OrderResponseDto> updateOrder(@PathVariable Long orderId, @RequestBody OrderResponseDto orderDetails) {
         OrderResponseDto updatedOrder = orderService.updateOrder(orderId, orderDetails);
         if (updatedOrder == null) {
@@ -48,7 +48,7 @@ public class OrderController {
         return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{orderId}")
+    @DeleteMapping("/{orderId}") //Delete order
     public ResponseEntity<Void> deleteOrder(@PathVariable Long orderId) {
         Boolean deleted = orderService.deleteOrder(orderId);
         if (!deleted) {
