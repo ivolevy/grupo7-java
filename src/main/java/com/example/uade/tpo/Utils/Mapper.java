@@ -53,4 +53,14 @@ public class Mapper {
         return paymentDto;
     }
 
+    public static OrderResponseDto convertToOrderResponseDto(Order order) {
+        OrderResponseDto orderDto = new OrderResponseDto();
+        orderDto.setId(order.getId());
+        orderDto.setUserId(order.getUserId());
+        orderDto.setQuantity(order.getQuantity());
+        orderDto.setOrderDate(order.getOrderDate());
+        orderDto.setStatus(order.getStatus());
+        return orderDto;
+    }
+
 }
