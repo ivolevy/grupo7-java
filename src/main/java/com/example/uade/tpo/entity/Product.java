@@ -16,6 +16,8 @@ public class Product {
     @Column
     private String description;
     @Column
+    private String brand;
+    @Column
     private Double price;
     @Column
     private Integer stock;

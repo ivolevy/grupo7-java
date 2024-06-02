@@ -15,6 +15,7 @@ public class ProductResponseDto {
     Long id;
     String name;
     String description;
+    String brand;
     Double price;
     Integer stock;
     Long sellerId;

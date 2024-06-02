@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,8 +15,10 @@ import lombok.experimental.FieldDefaults;
 public class ProductRequestDto {
     String name;
     String description;
+    String brand;
     Double price;
     Integer stock;
     Long sellerId;
     String image;
+    List<Long> categoriesIds;
 }

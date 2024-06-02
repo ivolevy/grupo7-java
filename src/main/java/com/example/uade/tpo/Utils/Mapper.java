@@ -1,13 +1,7 @@
 package com.example.uade.tpo.Utils;
 
-import com.example.uade.tpo.dtos.response.CategoryResponseDto;
-import com.example.uade.tpo.dtos.response.ProductResponseDto;
-import com.example.uade.tpo.dtos.response.SellerResponseDto;
-import com.example.uade.tpo.dtos.response.UserResponseDto;
-import com.example.uade.tpo.entity.Category;
-import com.example.uade.tpo.entity.Product;
-import com.example.uade.tpo.entity.Seller;
-import com.example.uade.tpo.entity.User;
+import com.example.uade.tpo.dtos.response.*;
+import com.example.uade.tpo.entity.*;
 
 public class Mapper {
 
@@ -46,6 +40,17 @@ public class Mapper {
         categoryDto.setId(category.getId());
         categoryDto.setName(category.getName());
         return categoryDto;
+    }
+
+    public static PaymentResponseDto convertToPaymentResponseDto(Payment payment) {
+        PaymentResponseDto paymentDto = new PaymentResponseDto();
+        paymentDto.setId(payment.getId());
+        paymentDto.setOrderId(payment.getOrderId());
+        paymentDto.setAmount(payment.getPaymentAmount());
+        paymentDto.setPaymentMethodId(payment.getPaymentMethodId());
+        paymentDto.setStatus(payment.getPaymentStatus());
+        paymentDto.setDate(payment.getPaymentDate());
+        return paymentDto;
     }
 
 }

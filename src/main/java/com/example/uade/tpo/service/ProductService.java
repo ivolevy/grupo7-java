@@ -21,7 +21,7 @@ public class ProductService {
     private IProductRepository productRepository;
 
     @Autowired
-    private IProductCategoriesRepository productCategoriesRepository;
+    private ProductCategoriesService productCategoriesService;
 
     public List<ProductResponseDto> getProducts() {
         return productRepository.findAll().stream().map
@@ -36,11 +36,20 @@ public class ProductService {
         Product product = new Product();
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
+        product.setBrand(productDto.getBrand());
         product.setPrice(productDto.getPrice());
         product.setStock(productDto.getStock());
         product.setSellerId(productDto.getSellerId());
         product.setImage(productDto.getImage());
-        return Mapper.convertToProductResponseDto(productRepository.save(product));
+
+        Product savedProduct = productRepository.save(product);
+
+        if(productDto.getCategoriesIds() != null) {
+            productDto.getCategoriesIds().forEach(categoryId ->
+                    productCategoriesService.createProductCategory(savedProduct.getId(), categoryId));
+        }
+
+        return Mapper.convertToProductResponseDto(savedProduct);
     }
 
     public ProductResponseDto updateProduct(Long productId, ProductRequestDto productDetails) {
@@ -48,6 +57,7 @@ public class ProductService {
         if (productOptional.isPresent()) {
             Product product = productOptional.get();
             product.setName(productDetails.getName());
+            product.setBrand(productDetails.getBrand());
             product.setDescription(productDetails.getDescription());
             product.setPrice(productDetails.getPrice());
             product.setStock(productDetails.getStock());
@@ -67,25 +77,18 @@ public class ProductService {
     }
 
     public List<ProductResponseDto> getProductsBySellerId(Long sellerId) {
-        List<ProductResponseDto> productResponseDtos = new ArrayList<>();
-        for(ProductResponseDto productResponseDto : getProducts()) {
-            if(productResponseDto.getSellerId().equals(sellerId)) {
-                productResponseDtos.add(productResponseDto);
-            }
-        }
-        return productResponseDtos;
+        return getProducts().stream()
+                .filter(product -> product.getSellerId().equals(sellerId))
+                .collect(Collectors.toList());
     }
 
     public List<ProductResponseDto> getProductsByCategoryId(Long categoryId) {
-        List<ProductResponseDto> productResponseDtos = new ArrayList<>();
-        List<ProductsCategories> productsCategories = productCategoriesRepository.findAll();
-        for(ProductsCategories productsCategory : productsCategories) {
-            if(productsCategory.getCategoryId().equals(categoryId)) {
-                productResponseDtos.add(Mapper.convertToProductResponseDto(productRepository.findById
-                        (productsCategory.getProductId()).get()));
-            }
-        }
-        return productResponseDtos;
+        List<Long> productsIds = productCategoriesService.getProductsIdByCategoryId(categoryId);
+        return productsIds.stream()
+                .map(this::getProductById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
 }
