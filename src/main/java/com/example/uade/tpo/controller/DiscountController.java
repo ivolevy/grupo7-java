@@ -25,7 +25,7 @@ public class DiscountController {
     }
 
     @GetMapping("/{discountId}")
-    public ResponseEntity<DiscountResponseDto> getDiscount(@PathVariable Long discountId) {
+    public ResponseEntity<DiscountResponseDto> getDiscountById(@PathVariable Long discountId) {
         Optional<DiscountResponseDto> discount = discountService.getDiscount(discountId);
         return discount.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
