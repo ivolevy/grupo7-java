@@ -16,8 +16,6 @@ public class Discount {
     @Column
     private String code;
     @Column
-    private String discountType;
-    @Column
     private Integer discountValue;
     @Column
     private Date startDate;

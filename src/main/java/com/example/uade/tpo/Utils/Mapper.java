@@ -74,4 +74,14 @@ public class Mapper {
         return orderDetailDto;
     }
 
+    public static DiscountResponseDto convertToDiscountResponseDto(Discount discount) {
+        DiscountResponseDto discountDto = new DiscountResponseDto();
+        discountDto.setDiscountId(discount.getDiscountId());
+        discountDto.setCode(discount.getCode());
+        discountDto.setDiscountValue(discount.getDiscountValue());
+        discountDto.setStartDate(discount.getStartDate());
+        discountDto.setEndDate(discount.getEndDate());
+        return discountDto;
+    }
+
 }
