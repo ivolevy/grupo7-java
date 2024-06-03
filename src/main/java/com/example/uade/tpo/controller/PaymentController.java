@@ -1,5 +1,7 @@
 package com.example.uade.tpo.controller;
 
+import com.example.uade.tpo.dtos.request.CardRequestDto;
+import com.example.uade.tpo.dtos.request.MPRequestDto;
 import com.example.uade.tpo.dtos.request.PaymentRequestDto;
 import com.example.uade.tpo.dtos.response.PaymentResponseDto;
 import com.example.uade.tpo.service.PaymentService;
@@ -23,9 +25,20 @@ public class PaymentController {
         return new ResponseEntity<>(payment, HttpStatus.CREATED);
     }
 
-    @PutMapping("/confirm/{id}")//Confirm payment
-    public ResponseEntity<PaymentResponseDto> confirmPayment(@PathVariable Long id) {
-        PaymentResponseDto paymentResponseDto = paymentService.confirmPayment(id);
+    @PutMapping("/confirmCard/{id}")//Confirm payment with card
+    public ResponseEntity<PaymentResponseDto> confirmCardPayment
+            (@PathVariable Long id, @RequestBody CardRequestDto cardPaymentMethod) {
+        PaymentResponseDto paymentResponseDto = paymentService.confirmCardPayment(id, cardPaymentMethod);
+        if (paymentResponseDto == null) {
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(paymentResponseDto, HttpStatus.OK);
+    }
+
+    @PutMapping("/confirmMP/{id}")//Confirm payment with MercadoPago
+    public ResponseEntity<PaymentResponseDto> confirmMPPayment
+            (@PathVariable Long id, @RequestBody MPRequestDto MercadoPagoPaymentMethod) {
+        PaymentResponseDto paymentResponseDto = paymentService.confirmMPPayment(id, MercadoPagoPaymentMethod);
         if (paymentResponseDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
