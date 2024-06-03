@@ -1,5 +1,6 @@
 package com.example.uade.tpo.controller;
 
+import com.example.uade.tpo.dtos.request.OrderRequestDto;
 import com.example.uade.tpo.dtos.response.OrderResponseDto;
 import com.example.uade.tpo.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +35,15 @@ public class OrderController {
     }
 
     @PostMapping //Create order
-    public ResponseEntity<OrderResponseDto> createOrder(@RequestBody OrderResponseDto orderDto) {
+    public ResponseEntity<OrderResponseDto> createOrder
+            (@RequestBody OrderRequestDto orderDto) {
         OrderResponseDto newOrder = orderService.createOrder(orderDto);
         return new ResponseEntity<>(newOrder, HttpStatus.CREATED);
     }
 
     @PutMapping("/{orderId}") //Update order
-    public ResponseEntity<OrderResponseDto> updateOrder(@PathVariable Long orderId, @RequestBody OrderResponseDto orderDetails) {
+    public ResponseEntity<OrderResponseDto> updateOrder
+            (@PathVariable Long orderId, @RequestBody OrderRequestDto orderDetails) {
         OrderResponseDto updatedOrder = orderService.updateOrder(orderId, orderDetails);
         if (updatedOrder == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

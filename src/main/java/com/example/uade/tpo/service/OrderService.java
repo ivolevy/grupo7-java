@@ -1,6 +1,7 @@
 package com.example.uade.tpo.service;
 
 import com.example.uade.tpo.Utils.Mapper;
+import com.example.uade.tpo.dtos.request.OrderRequestDto;
 import com.example.uade.tpo.dtos.response.OrderResponseDto;
 import com.example.uade.tpo.entity.Order;
 import com.example.uade.tpo.entity.OrderDetail;
@@ -36,16 +37,15 @@ public class OrderService {
         return orders;
     }
 
-    public OrderResponseDto createOrder(OrderResponseDto orderDto) {
+    public OrderResponseDto createOrder(OrderRequestDto orderDto) {
         Order order = new Order();
-        order.setUserId(orderDto.getUserId());
         order.setQuantity(orderDto.getQuantity());
         order.setOrderDate(orderDto.getOrderDate());
         order.setStatus(orderDto.getStatus());
         return Mapper.convertToOrderResponseDto(orderRepository.save(order));
     }
 
-    public OrderResponseDto updateOrder(Long orderId, OrderResponseDto orderDetails) {
+    public OrderResponseDto updateOrder(Long orderId, OrderRequestDto orderDetails) {
         Optional<Order> orderOptional = orderRepository.findById(orderId);
         if (orderOptional.isPresent()) {
             Order order = orderOptional.get();
