@@ -4,7 +4,11 @@ import com.example.uade.tpo.Utils.Mapper;
 import com.example.uade.tpo.dtos.request.ProductRequestDto;
 import com.example.uade.tpo.dtos.response.ProductResponseDto;
 import com.example.uade.tpo.entity.Product;
+import com.example.uade.tpo.entity.ProductsCategories;
+import com.example.uade.tpo.entity.Seller;
+import com.example.uade.tpo.repository.IProductCategoriesRepository;
 import com.example.uade.tpo.repository.IProductRepository;
+import com.example.uade.tpo.repository.ISellerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +24,9 @@ public class ProductService {
     @Autowired
     private ProductCategoriesService productCategoriesService;
 
+    @Autowired
+    private ISellerRepository sellerRepository;
+
     public List<ProductResponseDto> getProducts() {
         return productRepository.findAll().stream().map
                 (Mapper::convertToProductResponseDto).collect(Collectors.toList());
@@ -31,6 +38,12 @@ public class ProductService {
 
     public ProductResponseDto createProduct(ProductRequestDto productDto) {
         Product product = new Product();
+        List<Product> products = productRepository.findAll();
+        for (Product p : products) {
+            if (p.getName().equals(productDto.getName())) {
+                return null;
+            }
+        }
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
         product.setBrand(productDto.getBrand());
@@ -41,16 +54,17 @@ public class ProductService {
 
         Product savedProduct = productRepository.save(product);
 
-        if(productDto.getCategoriesIds() != null) {
-            productDto.getCategoriesIds().forEach(categoryId ->
-                    productCategoriesService.createProductCategory(savedProduct.getProductId(), categoryId));
-        }
-
         return Mapper.convertToProductResponseDto(savedProduct);
     }
 
     public ProductResponseDto updateProduct(Long productId, ProductRequestDto productDetails) {
         Optional<Product> productOptional = productRepository.findById(productId);
+        List<Product> products = productRepository.findAll();
+        for (Product p : products) {
+            if (p.getName().equals(productDetails.getName())) {
+                return null;
+            }
+        }
         if (productOptional.isPresent()) {
             Product product = productOptional.get();
             product.setName(productDetails.getName());
@@ -68,12 +82,17 @@ public class ProductService {
     public Boolean deleteProduct(Long productId) {
         if (productRepository.existsById(productId)) {
             productRepository.deleteById(productId);
+            productCategoriesService.deleteProduct(productId);
             return true;
         }
         return false;
     }
 
     public List<ProductResponseDto> getProductsBySellerId(Long sellerId) {
+        List<Long> sellerIds = sellerRepository.findAll().stream().map(Seller::getSellerId).toList();
+        if (!sellerIds.contains(sellerId)) {
+            return null;
+        }
         return getProducts().stream()
                 .filter(product -> product.getSellerId().equals(sellerId))
                 .collect(Collectors.toList());
@@ -81,6 +100,9 @@ public class ProductService {
 
     public List<ProductResponseDto> getProductsByCategoryId(Long categoryId) {
         List<Long> productsIds = productCategoriesService.getProductsIdByCategoryId(categoryId);
+        if(productsIds == null || productsIds.isEmpty()){
+            return null;
+        }
         return productsIds.stream()
                 .map(this::getProductById)
                 .filter(Optional::isPresent)

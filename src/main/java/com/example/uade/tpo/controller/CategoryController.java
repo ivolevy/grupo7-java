@@ -18,8 +18,9 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping("/")//Get all categories
-    public List<CategoryResponseDto> getCategories() {
-        return categoryService.getCategories();
+    public ResponseEntity<List<CategoryResponseDto>> getCategories() {
+        List<CategoryResponseDto> categories = categoryService.getCategories();
+        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
     @GetMapping("/{categoryId}")//Get category by id
@@ -32,6 +33,9 @@ public class CategoryController {
     @PostMapping//Create category
     public ResponseEntity<CategoryResponseDto> createCategory(@RequestBody CategoryRequestDto categoryDto) {
         CategoryResponseDto newCategory = categoryService.createCategory(categoryDto);
+        if (newCategory == null) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
         return new ResponseEntity<>(newCategory, HttpStatus.CREATED);
     }
 
@@ -43,6 +47,24 @@ public class CategoryController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{categoryId}")//Delete category
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
+        Boolean deleted = categoryService.deleteCategory(categoryId);
+        if (!deleted) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/{categoryId}/product/{productId}")//Add product to category
+    public ResponseEntity<Void> addProductToCategory(@PathVariable Long categoryId, @PathVariable Long productId) {
+        Boolean add = categoryService.addProductToCategory(categoryId, productId);
+        if (!add) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

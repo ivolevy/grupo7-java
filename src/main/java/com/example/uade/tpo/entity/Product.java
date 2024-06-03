@@ -25,4 +25,5 @@ public class Product {
     private Long sellerId;
     @Column
     private String image;
+
 }

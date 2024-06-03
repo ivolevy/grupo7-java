@@ -14,14 +14,29 @@ public class ProductCategoriesService {
     private IProductCategoriesRepository productCategoryRepository;
 
     public List<Long> getProductsIdByCategoryId(Long categoryId) {
+        List<Long> categoryIds = productCategoryRepository.getAllCategoryIds();
+        if (!categoryIds.contains(categoryId)) {
+            return null;
+        }
         return productCategoryRepository.getProductsIdByCategoryId(categoryId);
     }
 
-    public void createProductCategory(Long productId, Long categoryId) {
-        ProductsCategories productCategory = new ProductsCategories();
-        productCategory.setProductId(productId);
-        productCategory.setCategoryId(categoryId);
-        productCategoryRepository.save(productCategory);
+    public void deleteProduct(Long productId) {
+        List<ProductsCategories> productsCategories = productCategoryRepository.findAll();
+        for (ProductsCategories productsCategory : productsCategories) {
+            if (productsCategory.getProductId().equals(productId)) {
+                productCategoryRepository.delete(productsCategory);
+            }
+        }
+    }
+
+    public void deleteCategory(Long categoryId) {
+        List<ProductsCategories> productsCategories = productCategoryRepository.findAll();
+        for (ProductsCategories productsCategory : productsCategories) {
+            if (productsCategory.getCategoryId().equals(categoryId)) {
+                productsCategory.setCategoryId(null);
+            }
+        }
     }
 
 }

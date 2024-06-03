@@ -18,8 +18,9 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/") //Get all products
-    public List<ProductResponseDto> getAllProducts() {
-        return productService.getProducts();
+    public ResponseEntity<List<ProductResponseDto>> getAllProducts() {
+        List<ProductResponseDto> products = productService.getProducts();
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @GetMapping("/{productId}") //Get product by id
@@ -32,6 +33,9 @@ public class ProductController {
     @PostMapping //Create product
     public ResponseEntity<ProductResponseDto> createProduct(@RequestBody ProductRequestDto productDto) {
         ProductResponseDto newProduct = productService.createProduct(productDto);
+        if (newProduct == null) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
         return new ResponseEntity<>(newProduct, HttpStatus.CREATED);
     }
 
@@ -55,13 +59,21 @@ public class ProductController {
     }
 
     @GetMapping("/seller/{sellerId}") //Get products by seller
-    public List<ProductResponseDto> getProductsBySellerId(@PathVariable Long sellerId) {
-        return productService.getProductsBySellerId(sellerId);
+    public ResponseEntity<List<ProductResponseDto>> getProductsBySellerId(@PathVariable Long sellerId) {
+        List<ProductResponseDto> products = productService.getProductsBySellerId(sellerId);
+        if(products.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @GetMapping("/category/{categoryId}") //Get products by category
-    public List<ProductResponseDto> getProductsByCategoryId(@PathVariable Long categoryId) {
-        return productService.getProductsByCategoryId(categoryId);
+    public ResponseEntity<List<ProductResponseDto>> getProductsByCategoryId(@PathVariable Long categoryId) {
+        List<ProductResponseDto> products = productService.getProductsByCategoryId(categoryId);
+        if(products.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
 }

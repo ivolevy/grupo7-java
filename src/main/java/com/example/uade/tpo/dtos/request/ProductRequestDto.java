@@ -20,5 +20,4 @@ public class ProductRequestDto {
     Integer stock;
     Long sellerId;
     String image;
-    List<Long> categoriesIds;
 }

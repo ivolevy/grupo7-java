@@ -9,5 +9,9 @@ import java.util.List;
 @Repository
 public interface IProductCategoriesRepository extends JpaRepository<ProductsCategories, Long> {
     List<Long> getProductsIdByCategoryId(Long categoryId);
+
+    void deleteByProductId(Long productId);
+
+    List<Long> getAllCategoryIds();
 }
 
