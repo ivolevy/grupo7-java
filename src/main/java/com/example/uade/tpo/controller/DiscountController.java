@@ -41,7 +41,8 @@ public class DiscountController {
     }
 
     @PutMapping("/{discountId}") //Update discount
-    public ResponseEntity<DiscountResponseDto> updateDiscount(@PathVariable Long discountId, DiscountRequestDto discount) {
+    public ResponseEntity<DiscountResponseDto> updateDiscount
+            (@PathVariable Long discountId, DiscountRequestDto discount) {
         DiscountResponseDto updatedDiscount = discountService.updateDiscount(discountId, discount);
         if(updatedDiscount == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

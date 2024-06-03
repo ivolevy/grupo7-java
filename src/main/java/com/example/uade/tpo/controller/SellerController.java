@@ -37,7 +37,8 @@ public class SellerController {
     }
 
     @PutMapping("/{SellerId}") //Update seller
-    public ResponseEntity<SellerResponseDto> updateSeller(@PathVariable Long SellerId, @RequestBody SellerRequestDto sellerDetails) {
+    public ResponseEntity<SellerResponseDto> updateSeller
+            (@PathVariable Long SellerId, @RequestBody SellerRequestDto sellerDetails) {
         SellerResponseDto updatedSeller = sellerService.updateSeller(SellerId, sellerDetails);
         if (updatedSeller == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
