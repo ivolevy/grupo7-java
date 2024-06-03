@@ -5,11 +5,14 @@ import com.example.uade.tpo.dtos.request.CartItemRequestDto;
 import com.example.uade.tpo.dtos.response.CartResponseDto;
 import com.example.uade.tpo.entity.Cart;
 import com.example.uade.tpo.entity.CartItem;
+import com.example.uade.tpo.entity.User;
 import com.example.uade.tpo.repository.ICartRepository;
+import com.example.uade.tpo.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,6 +21,9 @@ public class CartService {
     @Autowired
     private ICartRepository cartRepository;
 
+    @Autowired
+    private IUserRepository userRepository;
+
     public Optional<CartResponseDto> getCartByUserId(Long userId) {
         Cart cart = cartRepository.findByUserId(userId);
         return Mapper.convertToOptionalCartResponseDto(cart);
@@ -25,6 +31,10 @@ public class CartService {
 
     public CartResponseDto addItemToCart(Long userId, CartItemRequestDto cartItem) {
         Cart cart = cartRepository.findByUserId(userId);
+        List<Long> userIds = userRepository.findAll().stream().map(User::getUserId).toList();
+        if(!userIds.contains(userId)) {
+            return null;
+        }
         if(cart == null) {
             cart = new Cart();
             cart.setUserId(userId);

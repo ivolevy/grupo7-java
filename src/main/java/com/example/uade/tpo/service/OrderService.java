@@ -81,19 +81,6 @@ public class OrderService {
         return null;
     }
 
-    public OrderResponseDto updateOrder(Long orderId, OrderRequestDto orderDetails) {
-        Optional<Order> orderOptional = orderRepository.findById(orderId);
-        if (orderOptional.isPresent()) {
-            Order order = orderOptional.get();
-            order.setUserId(orderDetails.getUserId());
-            order.setTotalAmount(orderDetails.getTotalAmount());
-            order.setOrderDate(orderDetails.getOrderDate());
-            order.setStatus(orderDetails.getStatus());
-            return Mapper.convertToOrderResponseDto(orderRepository.save(order));
-        }
-        return null;
-    }
-
     public Boolean deleteOrder(Long orderId) {
         if (orderRepository.existsById(orderId)) {
             orderRepository.deleteById(orderId);

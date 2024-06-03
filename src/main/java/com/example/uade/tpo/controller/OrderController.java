@@ -37,6 +37,9 @@ public class OrderController {
     @PostMapping ("/{cartId}")//Create order from cart
     public ResponseEntity<OrderResponseDto> createOrderFromCart(@PathVariable Long cartId) {
         OrderResponseDto newOrder = orderService.createOrderFromCart(cartId);
+        if(newOrder == null){
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
         return new ResponseEntity<>(newOrder, HttpStatus.CREATED);
     }
 
