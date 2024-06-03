@@ -1,7 +1,11 @@
 package com.example.uade.tpo.Utils;
 
+import com.example.uade.tpo.dtos.request.CartItemRequestDto;
 import com.example.uade.tpo.dtos.response.*;
 import com.example.uade.tpo.entity.*;
+
+import javax.swing.text.html.Option;
+import java.util.Optional;
 
 public class Mapper {
 
@@ -57,7 +61,7 @@ public class Mapper {
         OrderResponseDto orderDto = new OrderResponseDto();
         orderDto.setOrderId(order.getOrderId());
         orderDto.setUserId(order.getUserId());
-        orderDto.setQuantity(order.getQuantity());
+        orderDto.setTotalAmount(order.getTotalAmount());
         orderDto.setOrderDate(order.getOrderDate());
         orderDto.setStatus(order.getStatus());
         return orderDto;
@@ -82,6 +86,27 @@ public class Mapper {
         discountDto.setStartDate(discount.getStartDate());
         discountDto.setEndDate(discount.getEndDate());
         return discountDto;
+    }
+
+    public static CartResponseDto convertToCartResponseDto(Cart cart) {
+        CartResponseDto cartDto = new CartResponseDto();
+        cartDto.setCartId(cart.getCartId());
+        cartDto.setUserId(cart.getUserId());
+        return cartDto;
+    }
+
+    public static Optional<CartResponseDto> convertToOptionalCartResponseDto(Cart cart) {
+        if(cart == null) {
+            return Optional.empty();
+        }
+        return Optional.of(convertToCartResponseDto(cart));
+    }
+
+    public static CartItem convertToCartItem(CartItemRequestDto cartItem) {
+        CartItem item = new CartItem();
+        item.setProductId(cartItem.getProductId());
+        item.setQuantity(cartItem.getQuantity());
+        return item;
     }
 
 }
