@@ -16,10 +16,10 @@ public class Order {
         private Long orderId;
         @Column(name = "user_id", nullable = false)
         private Long userId;
-        @Column
-        private Integer quantity;
         @Column(name = "order_date")
         private Date orderDate;
         @Column
         private String status;
+        @Column(name = "total_amount")
+        private Double totalAmount;
 }

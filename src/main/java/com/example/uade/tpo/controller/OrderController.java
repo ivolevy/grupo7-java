@@ -18,14 +18,14 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @GetMapping("/{oderId}") //Get order by id
+    @GetMapping("/{orderId}") //Get order by id
     public ResponseEntity<OrderResponseDto> getOrderById(@PathVariable Long orderId) {
         Optional<OrderResponseDto> order = orderService.getOrderById(orderId);
         return order.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("{userId}") //Get orders by user id
+    @GetMapping("/{userId}") //Get orders by user id
     public ResponseEntity<List<OrderResponseDto>> getOrdersByUserId(@PathVariable Long userId) {
         List<OrderResponseDto> orders = orderService.getOrderByUserId(userId);
         if(orders.isEmpty()){
@@ -34,21 +34,10 @@ public class OrderController {
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
-    @PostMapping //Create order
-    public ResponseEntity<OrderResponseDto> createOrder
-            (@RequestBody OrderRequestDto orderDto) {
-        OrderResponseDto newOrder = orderService.createOrder(orderDto);
+    @PostMapping ("/{cartId}")//Create order from cart
+    public ResponseEntity<OrderResponseDto> createOrderFromCart(@PathVariable Long cartId) {
+        OrderResponseDto newOrder = orderService.createOrderFromCart(cartId);
         return new ResponseEntity<>(newOrder, HttpStatus.CREATED);
-    }
-
-    @PutMapping("/{orderId}") //Update order
-    public ResponseEntity<OrderResponseDto> updateOrder
-            (@PathVariable Long orderId, @RequestBody OrderRequestDto orderDetails) {
-        OrderResponseDto updatedOrder = orderService.updateOrder(orderId, orderDetails);
-        if (updatedOrder == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
     }
 
     @DeleteMapping("/{orderId}") //Delete order

@@ -14,7 +14,7 @@ import java.util.Date;
 public class OrderResponseDto {
     long OrderId;
     long userId;
-    int quantity;
+    double totalAmount;
     Date orderDate;
     String status;
 

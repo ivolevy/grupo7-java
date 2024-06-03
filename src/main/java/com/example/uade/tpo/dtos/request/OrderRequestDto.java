@@ -13,7 +13,7 @@ import java.util.Date;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class OrderRequestDto {
     long userId;
-    int quantity;
+    double totalAmount;
     Date orderDate;
     String status;
 }
