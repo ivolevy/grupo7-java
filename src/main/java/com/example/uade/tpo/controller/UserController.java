@@ -19,8 +19,9 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/") //Get all users
-    public List<UserResponseDto> getAllUsers() {
-        return userService.getUsuarios();
+    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
+        List<UserResponseDto> users = userService.getUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @GetMapping("/{userId}") //Get user by id
@@ -33,6 +34,9 @@ public class UserController {
     @PostMapping //Create user
     public ResponseEntity<UserResponseDto> createUser(@RequestBody UserRequestDto userDto) {
         UserResponseDto newUser = userService.createUser(userDto);
+        if (newUser == null) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 

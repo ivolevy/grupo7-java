@@ -18,7 +18,7 @@ public class UserService {
     @Autowired
     private IUserRepository userRepository;
 
-    public List<UserResponseDto> getUsuarios() {
+    public List<UserResponseDto> getUsers() {
         return userRepository.findAll().stream().map(Mapper::convertToUserResponseDto).collect(Collectors.toList());
     }
 
@@ -28,6 +28,12 @@ public class UserService {
 
     public UserResponseDto createUser(UserRequestDto userDto) {
         User user = new User();
+        List<User> users = userRepository.findAll();
+        for (User u : users) {
+            if (u.getEmail().equals(userDto.getEmail())) {
+                return null;
+            }
+        }
         user.setName(userDto.getName());
         user.setLastName(userDto.getLastName());
         user.setEmail(userDto.getEmail());
@@ -37,6 +43,12 @@ public class UserService {
 
     public UserResponseDto updateUser(Long userId, UserRequestDto userDetails) {
         Optional<User> userOptional = userRepository.findById(userId);
+        List<User> users = userRepository.findAll();
+        for (User u : users) {
+            if (u.getEmail().equals(userDetails.getEmail())) {
+                return null;
+            }
+        }
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             user.setName(userDetails.getName());
