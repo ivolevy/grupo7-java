@@ -1,6 +1,8 @@
 package com.example.uade.tpo.service;
 
 import com.example.uade.tpo.Utils.Mapper;
+import com.example.uade.tpo.dtos.request.OrderDetailRequestDto;
+import com.example.uade.tpo.dtos.request.OrderRequestDto;
 import com.example.uade.tpo.dtos.response.OrderDetailResponseDto;
 import com.example.uade.tpo.entity.Order;
 import com.example.uade.tpo.entity.OrderDetail;
@@ -25,31 +27,31 @@ public class OrderDetailService {
         return orderDetailRepository.findById(orderId).map(Mapper::convertToOrderDetailResponseDto);
     }
 
-    public OrderDetailResponseDto createOrderDetail(Long orderId, OrderDetailResponseDto orderDetailResponseDto) {
+    public OrderDetailResponseDto createOrderDetail(Long orderId, OrderDetailRequestDto orderDetail) {
         List<Order> orders = orderRepository.findAll();
-        OrderDetail orderDetail = new OrderDetail();
+        OrderDetail orderD = new OrderDetail();
         for(Order order : orders){
             if(order.getOrderId().equals(orderId)) {
-                orderDetail.setOrderId(orderId);
-                orderDetail.setProductId(orderDetailResponseDto.getProductId());
-                orderDetail.setQuantity(orderDetailResponseDto.getQuantity());
-                orderDetail.setPrice(orderDetailResponseDto.getPrice());
-                orderDetail.setTotal(orderDetailResponseDto.getTotal());
-                return Mapper.convertToOrderDetailResponseDto(orderDetailRepository.save(orderDetail));
+                orderD.setOrderId(orderId);
+                orderD.setProductId(orderDetail.getProductId());
+                orderD.setQuantity(orderDetail.getQuantity());
+                orderD.setPrice(orderDetail.getPrice());
+                orderD.setTotal(orderDetail.getTotal());
+                return Mapper.convertToOrderDetailResponseDto(orderDetailRepository.save(orderD));
             }
         }
         return null;
     }
 
-    public OrderDetailResponseDto updateOrderDetail(Long orderId, OrderDetailResponseDto orderDetailResponseDto){
-        Optional<OrderDetailResponseDto> orderDetail = getOrderDetailById(orderId);
-        if(orderDetail.isPresent()){
+    public OrderDetailResponseDto updateOrderDetail(Long orderId, OrderDetailRequestDto orderDetail){
+        Optional<OrderDetailResponseDto> optionalOrderDetail = getOrderDetailById(orderId);
+        if(optionalOrderDetail.isPresent()){
             OrderDetail orderDetailToUpdate = new OrderDetail();
+            orderDetailToUpdate.setProductId(orderDetail.getProductId());
             orderDetailToUpdate.setOrderId(orderId);
-            orderDetailToUpdate.setProductId(orderDetailResponseDto.getProductId());
-            orderDetailToUpdate.setQuantity(orderDetailResponseDto.getQuantity());
-            orderDetailToUpdate.setPrice(orderDetailResponseDto.getPrice());
-            orderDetailToUpdate.setTotal(orderDetailResponseDto.getTotal());
+            orderDetailToUpdate.setQuantity(orderDetail.getQuantity());
+            orderDetailToUpdate.setPrice(orderDetail.getPrice());
+            orderDetailToUpdate.setTotal(orderDetail.getTotal());
             return Mapper.convertToOrderDetailResponseDto(orderDetailRepository.save(orderDetailToUpdate));
         }
         return null;

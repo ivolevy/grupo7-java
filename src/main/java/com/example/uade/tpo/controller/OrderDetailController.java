@@ -1,5 +1,6 @@
 package com.example.uade.tpo.controller;
 
+import com.example.uade.tpo.dtos.request.OrderDetailRequestDto;
 import com.example.uade.tpo.dtos.response.OrderDetailResponseDto;
 import com.example.uade.tpo.service.OrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,8 @@ public class OrderDetailController {
     }
 
     @PostMapping("/{orderId}") //Create orderDetail
-    public ResponseEntity<OrderDetailResponseDto> createOrderDetail(@PathVariable Long orderId, OrderDetailResponseDto orderDetail) {
+    public ResponseEntity<OrderDetailResponseDto> createOrderDetail
+            (@PathVariable Long orderId, OrderDetailRequestDto orderDetail) {
         OrderDetailResponseDto orderDetailResponseDto = orderDetailService.createOrderDetail(orderId, orderDetail);
         if(orderDetailResponseDto == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -33,7 +35,8 @@ public class OrderDetailController {
     }
 
     @PutMapping("/{orderId}") //Update orderDetail
-    public ResponseEntity<OrderDetailResponseDto> updateOrderDetail(@PathVariable Long orderId, OrderDetailResponseDto orderDetail) {
+    public ResponseEntity<OrderDetailResponseDto> updateOrderDetail
+            (@PathVariable Long orderId, OrderDetailRequestDto orderDetail) {
         OrderDetailResponseDto orderDetailResponseDto = orderDetailService.updateOrderDetail(orderId, orderDetail);
         if(orderDetailResponseDto == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
