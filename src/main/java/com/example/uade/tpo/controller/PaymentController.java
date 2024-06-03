@@ -22,6 +22,9 @@ public class PaymentController {
     @PostMapping("/process")//Process payment
     public ResponseEntity<PaymentResponseDto> processPayment(@RequestBody PaymentRequestDto paymentRequestDto) {
         PaymentResponseDto payment = paymentService.processPayment(paymentRequestDto);
+        if (payment == null) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
         return new ResponseEntity<>(payment, HttpStatus.CREATED);
     }
 

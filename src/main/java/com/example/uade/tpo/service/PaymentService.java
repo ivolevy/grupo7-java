@@ -23,6 +23,12 @@ public class PaymentService {
 
     public PaymentResponseDto processPayment(PaymentRequestDto paymentRequestDto) {
         Payment payment = new Payment();
+        List<Long> paymentIds = paymentRepository.getAllPaymentIds();
+        for (Long id : paymentIds) {
+            if (id.equals(paymentRequestDto.getOrderId())) {
+                return null;
+            }
+        }
         payment.setOrderId(paymentRequestDto.getOrderId());
         payment.setPaymentMethodId(paymentRequestDto.getPaymentMethodId());
         payment.setPaymentAmount(paymentRequestDto.getAmount());
@@ -35,6 +41,12 @@ public class PaymentService {
 
     public PaymentResponseDto confirmMPPayment(Long paymentId, MPRequestDto mercadoPagoPaymentMethod) {
         MercadoPago mercadoPago = new MercadoPago();
+        List<Long> paymentIds = paymentRepository.getAllPaymentIds();
+        for (Long id : paymentIds) {
+            if (id.equals(paymentId)) {
+                return null;
+            }
+        }
         mercadoPago.setEmail(mercadoPagoPaymentMethod.getEmail());
         mercadoPago.setPassword(mercadoPagoPaymentMethod.getPassword());
         return confirmPayment(paymentId, mercadoPago);
@@ -42,6 +54,12 @@ public class PaymentService {
 
     public PaymentResponseDto confirmCardPayment(Long paymentId, CardRequestDto cardPaymentMethod) {
         CreditCard card = new CreditCard();
+        List<Long> paymentIds = paymentRepository.getAllPaymentIds();
+        for (Long id : paymentIds) {
+            if (id.equals(paymentId)) {
+                return null;
+            }
+        }
         card.setCardNumber(cardPaymentMethod.getCardNumber());
         card.setNameOnCard(cardPaymentMethod.getNameOnCard());
         card.setSecurityCode(cardPaymentMethod.getSecurityCode());
