@@ -14,7 +14,7 @@ public class ProductCategoriesService {
     private IProductCategoriesRepository productCategoryRepository;
 
     public List<Long> getProductsIdByCategoryId(Long categoryId) {
-        List<Long> categoryIds = productCategoryRepository.getAllCategoryIds();
+        List<Long> categoryIds = productCategoryRepository.findAllCategoryIds();
         if (!categoryIds.contains(categoryId)) {
             return null;
         }

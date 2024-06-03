@@ -5,12 +5,15 @@ import com.example.uade.tpo.dtos.request.CardRequestDto;
 import com.example.uade.tpo.dtos.request.MPRequestDto;
 import com.example.uade.tpo.dtos.request.PaymentRequestDto;
 import com.example.uade.tpo.dtos.response.PaymentResponseDto;
+import com.example.uade.tpo.entity.Order;
 import com.example.uade.tpo.entity.Payment;
 import com.example.uade.tpo.entity.paymentMethod.*;
+import com.example.uade.tpo.repository.IOrderRepository;
 import com.example.uade.tpo.repository.IPaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,6 +23,9 @@ public class PaymentService {
 
     @Autowired
     private IPaymentRepository paymentRepository;
+
+    @Autowired
+    private IOrderRepository orderRepository;
 
     public PaymentResponseDto processPayment(PaymentRequestDto paymentRequestDto) {
         Payment payment = new Payment();
@@ -95,7 +101,19 @@ public class PaymentService {
     }
 
     public List<PaymentResponseDto> getPaymentHistory(Long userId) {
-        List<Payment> payments = paymentRepository.findByUserId(userId);
+        List<Order> orders = new ArrayList<>();
+        if(orderRepository.findByUserId(userId) == null){
+            return null;
+        }
+        for(Order order : orderRepository.findAll()){
+            if(order.getUserId().equals(userId)){
+                orders.add(order);
+            }
+        }
+        List<Payment> payments = new ArrayList<>();
+        for(Order order : orders){
+            payments.add(paymentRepository.findByOrderId(order.getOrderId()));
+        }
         return payments.stream().map(Mapper::convertToPaymentResponseDto).collect(Collectors.toList());
     }
 
