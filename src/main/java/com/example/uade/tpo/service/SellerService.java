@@ -28,6 +28,12 @@ public class SellerService {
 
     public SellerResponseDto createSeller(SellerRequestDto sellerDto) {
         Seller seller = new Seller();
+        List<Seller> sellers = sellerRepository.findAll();
+        for (Seller s : sellers) {
+            if (s.getUserId().equals(sellerDto.getUserId()) || s.getStoreName().equals(sellerDto.getStoreName())) {
+                return null;
+            }
+        }
         seller.setUserId(sellerDto.getUserId());
         seller.setStoreName(sellerDto.getStoreName());
         seller.setAddress(sellerDto.getAddress());
@@ -36,6 +42,12 @@ public class SellerService {
 
     public SellerResponseDto updateSeller(Long sellerId, SellerRequestDto sellerDetails) {
         Optional<Seller> sellerOptional = sellerRepository.findById(sellerId);
+        List<Seller> sellers = sellerRepository.findAll();
+        for (Seller s : sellers) {
+            if (s.getUserId().equals(sellerDetails.getUserId()) || s.getStoreName().equals(sellerDetails.getStoreName())) {
+                return null;
+            }
+        }
         if (sellerOptional.isPresent()) {
             Seller seller = sellerOptional.get();
             seller.setUserId(sellerDetails.getUserId());

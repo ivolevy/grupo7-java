@@ -19,8 +19,9 @@ public class SellerController {
     private SellerService sellerService;
 
     @GetMapping("/") //Get all sellers
-    public List<SellerResponseDto> getAllSellers() {
-        return sellerService.getSellers();
+    public ResponseEntity<List<SellerResponseDto>> getAllSellers() {
+        List<SellerResponseDto> sellers = sellerService.getSellers();
+        return new ResponseEntity<>(sellers, HttpStatus.OK);
     }
 
     @GetMapping("/{SellerId}") //Get seller by id
@@ -33,6 +34,9 @@ public class SellerController {
     @PostMapping //Create seller
     public ResponseEntity<SellerResponseDto> createSeller(@RequestBody SellerRequestDto sellerDto) {
         SellerResponseDto newSeller = sellerService.createSeller(sellerDto);
+        if (newSeller == null) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
         return new ResponseEntity<>(newSeller, HttpStatus.CREATED);
     }
 
