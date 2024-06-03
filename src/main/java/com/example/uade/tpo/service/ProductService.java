@@ -4,13 +4,10 @@ import com.example.uade.tpo.Utils.Mapper;
 import com.example.uade.tpo.dtos.request.ProductRequestDto;
 import com.example.uade.tpo.dtos.response.ProductResponseDto;
 import com.example.uade.tpo.entity.Product;
-import com.example.uade.tpo.entity.ProductsCategories;
-import com.example.uade.tpo.repository.IProductCategoriesRepository;
 import com.example.uade.tpo.repository.IProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

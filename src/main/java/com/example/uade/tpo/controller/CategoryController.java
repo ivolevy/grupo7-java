@@ -2,7 +2,6 @@ package com.example.uade.tpo.controller;
 
 import com.example.uade.tpo.dtos.request.CategoryRequestDto;
 import com.example.uade.tpo.dtos.response.CategoryResponseDto;
-import com.example.uade.tpo.dtos.response.SellerResponseDto;
 import com.example.uade.tpo.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
