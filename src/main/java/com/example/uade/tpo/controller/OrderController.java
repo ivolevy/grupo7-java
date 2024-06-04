@@ -51,4 +51,13 @@ public class OrderController {
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @PutMapping("/{orderId}/discount/{code}") //Apply discount to order
+    public ResponseEntity<OrderResponseDto> applyDiscountToOrder(@PathVariable Long orderId, @PathVariable String code) {
+        OrderResponseDto order = orderService.applyDiscountToOrder(orderId, code);
+        if(order == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(order, HttpStatus.OK);
+    }
 }

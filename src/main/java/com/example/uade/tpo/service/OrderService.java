@@ -3,10 +3,7 @@ package com.example.uade.tpo.service;
 import com.example.uade.tpo.Utils.Mapper;
 import com.example.uade.tpo.dtos.request.OrderRequestDto;
 import com.example.uade.tpo.dtos.response.OrderResponseDto;
-import com.example.uade.tpo.entity.Cart;
-import com.example.uade.tpo.entity.CartItem;
-import com.example.uade.tpo.entity.Order;
-import com.example.uade.tpo.entity.OrderDetail;
+import com.example.uade.tpo.entity.*;
 import com.example.uade.tpo.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +29,9 @@ public class OrderService {
 
     @Autowired
     private ICartItemRepository cartItemRepository;
+
+    @Autowired
+    private IDiscountRepository discountRepository;
 
     public Optional<OrderResponseDto> getOrderById(Long orderId) {
         return orderRepository.findById(orderId).map(Mapper::convertToOrderResponseDto);
@@ -96,4 +96,23 @@ public class OrderService {
         return false;
     }
 
+    public OrderResponseDto applyDiscountToOrder(Long orderId, String code) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
+            if(order.getStatus().equals("PENDING")) {
+                Optional<Discount> optionalDiscount = discountRepository.findByCode(code);
+                if (optionalDiscount.isPresent()) {
+                    Discount discount = optionalDiscount.get();
+                    if (discount.getStartDate().before(new Date()) && discount.getEndDate().after(new Date())) {
+                        double discountInPercentage = (double) discount.getDiscountValue() / 100;
+                        order.setTotalAmount(order.getTotalAmount() - (order.getTotalAmount() * discountInPercentage));
+                        orderRepository.save(order);
+                        return Mapper.convertToOrderResponseDto(order);
+                    }
+                }
+            }
+        }
+        return null;
+    }
 }
