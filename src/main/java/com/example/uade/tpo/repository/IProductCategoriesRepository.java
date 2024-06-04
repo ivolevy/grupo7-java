@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface IProductCategoriesRepository extends JpaRepository<ProductsCategories, Long> {
+    @Query("SELECT pc.productId FROM ProductsCategories pc WHERE pc.categoryId = :categoryId")
     List<Long> getProductsIdByCategoryId(Long categoryId);
     @Query("SELECT pc.categoryId FROM ProductsCategories pc")
     List<Long> findAllCategoryIds();

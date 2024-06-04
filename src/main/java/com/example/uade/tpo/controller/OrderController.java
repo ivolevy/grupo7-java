@@ -25,7 +25,7 @@ public class OrderController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/{userId}") //Get orders by user id
+    @GetMapping("/user/{userId}") //Get orders by user id
     public ResponseEntity<List<OrderResponseDto>> getOrdersByUserId(@PathVariable Long userId) {
         List<OrderResponseDto> orders = orderService.getOrderByUserId(userId);
         if(orders.isEmpty()){
@@ -43,7 +43,7 @@ public class OrderController {
         return new ResponseEntity<>(newOrder, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{orderId}") //Delete order
+    @DeleteMapping("/delete/{orderId}") //Delete order
     public ResponseEntity<Void> deleteOrder(@PathVariable Long orderId) {
         Boolean deleted = orderService.deleteOrder(orderId);
         if (!deleted) {
