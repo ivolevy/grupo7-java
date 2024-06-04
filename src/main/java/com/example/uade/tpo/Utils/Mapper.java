@@ -1,7 +1,10 @@
 package com.example.uade.tpo.Utils;
 
+import com.example.uade.tpo.dtos.request.CartItemRequestDto;
 import com.example.uade.tpo.dtos.response.*;
 import com.example.uade.tpo.entity.*;
+
+import java.util.Optional;
 
 public class Mapper {
 
