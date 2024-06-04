@@ -50,7 +50,6 @@ public class Mapper {
         paymentDto.setPaymentId(payment.getId());
         paymentDto.setOrderId(payment.getOrderId());
         paymentDto.setAmount(payment.getPaymentAmount());
-        paymentDto.setPaymentMethodId(payment.getPaymentMethodId());
         paymentDto.setStatus(payment.getPaymentStatus());
         paymentDto.setDate(payment.getPaymentDate());
         return paymentDto;

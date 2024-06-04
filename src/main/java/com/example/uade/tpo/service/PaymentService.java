@@ -27,19 +27,18 @@ public class PaymentService {
     @Autowired
     private IOrderRepository orderRepository;
 
-    public PaymentResponseDto processPayment(PaymentRequestDto paymentRequestDto) {
+    public PaymentResponseDto processPayment(Long orderId) {
         Payment payment = new Payment();
         List<Long> paymentIds = paymentRepository.getAllPaymentIds();
         for (Long id : paymentIds) {
-            if (id.equals(paymentRequestDto.getOrderId())) {
+            if (id.equals(orderId)) {
                 return null;
             }
         }
-        payment.setOrderId(paymentRequestDto.getOrderId());
-        payment.setPaymentMethodId(paymentRequestDto.getPaymentMethodId());
-        payment.setPaymentAmount(paymentRequestDto.getAmount());
+        payment.setOrderId(orderId);
+        payment.setPaymentAmount(orderRepository.findById(orderId).get().getTotalAmount());
         payment.setPaymentStatus("PENDING");
-        payment.setPaymentDate(paymentRequestDto.getDate());
+        payment.setPaymentDate(orderRepository.findById(orderId).get().getOrderDate());
 
         Payment savedPayment = paymentRepository.save(payment);
         return Mapper.convertToPaymentResponseDto(savedPayment);
@@ -47,12 +46,6 @@ public class PaymentService {
 
     public PaymentResponseDto confirmMPPayment(Long paymentId, MPRequestDto mercadoPagoPaymentMethod) {
         MercadoPago mercadoPago = new MercadoPago();
-        List<Long> paymentIds = paymentRepository.getAllPaymentIds();
-        for (Long id : paymentIds) {
-            if (id.equals(paymentId)) {
-                return null;
-            }
-        }
         mercadoPago.setEmail(mercadoPagoPaymentMethod.getEmail());
         mercadoPago.setPassword(mercadoPagoPaymentMethod.getPassword());
         return confirmPayment(paymentId, mercadoPago);
@@ -76,10 +69,14 @@ public class PaymentService {
     private <T extends IPaymentMethod> PaymentResponseDto confirmPayment(Long paymentId, T paymentMethod) {
         Optional<Payment> optionalPayment = paymentRepository.findById(paymentId);
         if (optionalPayment.isPresent() && paymentMethod.pay(optionalPayment.get().getPaymentAmount())) {
+            Order order = orderRepository.findById(optionalPayment.get().getOrderId()).orElse(null);
             Payment payment = optionalPayment.get();
             payment.setPaymentStatus("CONFIRMED");
-            payment.setPaymentAmount(0.0);
             Payment savedPayment = paymentRepository.save(payment);
+            if (order != null) {
+                order.setStatus("PAID");
+                orderRepository.save(order);
+            }
             return Mapper.convertToPaymentResponseDto(savedPayment);
         }
         return null;

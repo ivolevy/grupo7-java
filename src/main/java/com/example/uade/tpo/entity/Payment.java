@@ -15,8 +15,6 @@ public class Payment {
     private Long id;
     @Column(name = "order_id", nullable = false)
     private Long orderId;
-    @Column(name = "payment_method_id", nullable = false)
-    private Long paymentMethodId;
     @Column(name = "payment_date", nullable = false)
     private Date paymentDate;
     @Column(name = "payment_amount", nullable = false)

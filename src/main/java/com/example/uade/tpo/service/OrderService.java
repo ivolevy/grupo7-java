@@ -63,6 +63,7 @@ public class OrderService {
                 return null;
             }
 
+            orderRepository.save(order);
             List<OrderDetail> orderDetails = new ArrayList<>();
 
             for(CartItem cartItem : cartItems){
@@ -74,7 +75,8 @@ public class OrderService {
                 orderDetails.add(orderDetail);
             }
 
-            order.setTotalAmount(orderDetails.stream().mapToDouble(OrderDetail::getTotal).sum());
+            double totalAmount = orderDetails.stream().mapToDouble(detail -> detail.getQuantity() * detail.getPrice()).sum();
+            order.setTotalAmount(totalAmount);
 
             orderRepository.save(order);
             orderDetailRepository.saveAll(orderDetails);
@@ -104,7 +106,7 @@ public class OrderService {
                 Optional<Discount> optionalDiscount = discountRepository.findByCode(code);
                 if (optionalDiscount.isPresent()) {
                     Discount discount = optionalDiscount.get();
-                    if (discount.getStartDate().before(new Date()) && discount.getEndDate().after(new Date())) {
+                    if (discount.getStartDate().before(new Date()) || discount.getEndDate().after(new Date())) {
                         double discountInPercentage = (double) discount.getDiscountValue() / 100;
                         order.setTotalAmount(order.getTotalAmount() - (order.getTotalAmount() * discountInPercentage));
                         orderRepository.save(order);

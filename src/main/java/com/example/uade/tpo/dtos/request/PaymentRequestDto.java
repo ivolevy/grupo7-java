@@ -13,8 +13,6 @@ import java.util.Date;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PaymentRequestDto {
-    Long orderId;
-    Long paymentMethodId;
     Double amount;
     String status;
     Date date;

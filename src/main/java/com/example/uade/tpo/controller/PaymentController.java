@@ -19,38 +19,38 @@ public class PaymentController {
     @Autowired
     private PaymentService paymentService;
 
-    @PostMapping("/process")//Process payment
-    public ResponseEntity<PaymentResponseDto> processPayment(@RequestBody PaymentRequestDto paymentRequestDto) {
-        PaymentResponseDto payment = paymentService.processPayment(paymentRequestDto);
+    @PostMapping("/process/order/{orderId}")//Process payment
+    public ResponseEntity<PaymentResponseDto> processPayment(@PathVariable Long orderId) {
+        PaymentResponseDto payment = paymentService.processPayment(orderId);
         if (payment == null) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>(payment, HttpStatus.CREATED);
     }
 
-    @PutMapping("/confirmCard/{id}")//Confirm payment with card
+    @PutMapping("/confirmCard/{paymentId}")//Confirm payment with card
     public ResponseEntity<PaymentResponseDto> confirmCardPayment
-            (@PathVariable Long id, @RequestBody CardRequestDto cardPaymentMethod) {
-        PaymentResponseDto paymentResponseDto = paymentService.confirmCardPayment(id, cardPaymentMethod);
+            (@PathVariable Long paymentId, @RequestBody CardRequestDto cardPaymentMethod) {
+        PaymentResponseDto paymentResponseDto = paymentService.confirmCardPayment(paymentId, cardPaymentMethod);
         if (paymentResponseDto == null) {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(paymentResponseDto, HttpStatus.OK);
     }
 
-    @PutMapping("/confirmMP/{id}")//Confirm payment with MercadoPago
+    @PutMapping("/confirmMP/{paymentId}")//Confirm payment with MercadoPago
     public ResponseEntity<PaymentResponseDto> confirmMPPayment
-            (@PathVariable Long id, @RequestBody MPRequestDto MercadoPagoPaymentMethod) {
-        PaymentResponseDto paymentResponseDto = paymentService.confirmMPPayment(id, MercadoPagoPaymentMethod);
+            (@PathVariable Long paymentId, @RequestBody MPRequestDto MercadoPagoPaymentMethod) {
+        PaymentResponseDto paymentResponseDto = paymentService.confirmMPPayment(paymentId, MercadoPagoPaymentMethod);
         if (paymentResponseDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(paymentResponseDto, HttpStatus.OK);
     }
 
-    @PostMapping("/cancel/{id}")//Cancel payment
-    public ResponseEntity<PaymentResponseDto> cancelPayment(@PathVariable Long id) {
-        PaymentResponseDto paymentResponseDto = paymentService.cancelPayment(id);
+    @PostMapping("/cancel/{paymentId}")//Cancel payment
+    public ResponseEntity<PaymentResponseDto> cancelPayment(@PathVariable Long paymentId) {
+        PaymentResponseDto paymentResponseDto = paymentService.cancelPayment(paymentId);
         if (paymentResponseDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

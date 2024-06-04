@@ -17,5 +17,4 @@ public class PaymentResponseDto {
     Double amount;
     Date date;
     String status;
-    Long paymentMethodId;
 }
