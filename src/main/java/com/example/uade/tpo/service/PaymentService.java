@@ -112,7 +112,7 @@ public class PaymentService {
         }
         List<Payment> payments = new ArrayList<>();
         for(Order order : orders){
-            payments.add(paymentRepository.findByOrderId(order.getOrderId()));
+            payments.add(paymentRepository.findByOrderId(order.getId()));
         }
         return payments.stream().map(Mapper::convertToPaymentResponseDto).collect(Collectors.toList());
     }

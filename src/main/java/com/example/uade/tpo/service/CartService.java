@@ -6,8 +6,10 @@ import com.example.uade.tpo.dtos.response.CartResponseDto;
 import com.example.uade.tpo.entity.Cart;
 import com.example.uade.tpo.entity.CartItem;
 import com.example.uade.tpo.entity.User;
+import com.example.uade.tpo.repository.ICartItemRepository;
 import com.example.uade.tpo.repository.ICartRepository;
 import com.example.uade.tpo.repository.IUserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,47 +26,62 @@ public class CartService {
     @Autowired
     private IUserRepository userRepository;
 
+    @Autowired
+    private ICartItemRepository cartItemRepository;
+
     public Optional<CartResponseDto> getCartByUserId(Long userId) {
-        Cart cart = cartRepository.findByUserId(userId);
-        return Mapper.convertToOptionalCartResponseDto(cart);
+        return cartRepository.findByUserId(userId).map(Mapper::convertToCartResponseDto);
     }
 
     public CartResponseDto addItemToCart(Long userId, CartItemRequestDto cartItem) {
-        Cart cart = cartRepository.findByUserId(userId);
-        List<Long> userIds = userRepository.findAll().stream().map(User::getUserId).toList();
-        if(!userIds.contains(userId)) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if(userOptional.isEmpty()) {
             return null;
         }
+
+        Cart cart = cartRepository.findByUserId(userId).orElse(null);
         if(cart == null) {
             cart = new Cart();
             cart.setUserId(userId);
-            cart.setItems(new ArrayList<>());
+            cartRepository.save(cart);
         }
-        CartItem newItem = Mapper.convertToCartItem(cartItem);
-        Optional<CartItem> existingItemOptional = cart.getItems().stream().filter(item -> item.getCartItemsId().equals
-                (newItem.getCartItemsId())).findFirst();
 
-        if(existingItemOptional.isPresent()) {
-            CartItem existingItem = existingItemOptional.get();
-            existingItem.setQuantity(existingItem.getQuantity() + 1);
+        CartItem existingItem = cartItemRepository.findByCartIdAndProductId
+                (cart.getId(), cartItem.getProductId()).orElse(null);
+
+        if(existingItem != null) {
+            existingItem.setQuantity(existingItem.getQuantity() + cartItem.getQuantity());
+            cartItemRepository.save(existingItem);
         } else {
-            cart.getItems().add(newItem);
+            CartItem newItem = new CartItem();
+            newItem.setCartId(cart.getId());
+            newItem.setProductId(cartItem.getProductId());
+            newItem.setQuantity(cartItem.getQuantity());
+            cartItemRepository.save(newItem);
         }
-        return Mapper.convertToCartResponseDto(cartRepository.save(cart));
+
+        return Mapper.convertToCartResponseDto(cart);
     }
 
+    @Transactional
     public Boolean removeItemFromCart(Long userId, Long productId) {
-        Cart cart = cartRepository.findByUserId(userId);
-        if(cart == null) {
+        Optional<Cart> cartOptional = cartRepository.findByUserId(userId);
+        if(cartOptional.isEmpty()) {
             return false;
         }
-        Optional<CartItem> existingItemOptional = cart.getItems().stream().filter(item -> item.getProductId().equals
-                (productId)).findFirst();
-        if(existingItemOptional.isEmpty()) {
+
+        Cart cart = cartOptional.get();
+        List<CartItem> cartItems = cartItemRepository.findByCartId(cart.getId());
+
+        boolean removed = cartItems.removeIf(item -> item.getProductId().equals(productId));
+
+        if(removed){
+            if(cartItems.isEmpty()){
+                cartRepository.delete(cart);
+            }
+            return true;
+        } else {
             return false;
         }
-        cart.getItems().removeIf(item -> item.getProductId().equals(productId));
-        cartRepository.save(cart);
-        return true;
     }
 }

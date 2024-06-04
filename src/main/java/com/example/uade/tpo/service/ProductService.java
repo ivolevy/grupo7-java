@@ -89,7 +89,7 @@ public class ProductService {
     }
 
     public List<ProductResponseDto> getProductsBySellerId(Long sellerId) {
-        List<Long> sellerIds = sellerRepository.findAll().stream().map(Seller::getSellerId).toList();
+        List<Long> sellerIds = sellerRepository.findAll().stream().map(Seller::getId).toList();
         if (!sellerIds.contains(sellerId)) {
             return null;
         }

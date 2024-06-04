@@ -10,8 +10,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class UserResponseDto {
-    Long userId;
     String name;
     String lastName;
     String email;
+    Long userId;
 }

@@ -15,5 +15,4 @@ import java.util.List;
 public class CartResponseDto {
     Long cartId;
     Long userId;
-    List<CartItem> items;
 }

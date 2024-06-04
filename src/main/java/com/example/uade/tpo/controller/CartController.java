@@ -39,8 +39,6 @@ public class CartController {
         Boolean deleted = cartService.removeItemFromCart(userId, productId);
         if (!deleted) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else if (Objects.requireNonNull(getCartByUserId(userId).getBody()).getItems().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }

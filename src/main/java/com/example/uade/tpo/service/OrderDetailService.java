@@ -27,22 +27,6 @@ public class OrderDetailService {
         return orderDetailRepository.findById(orderId).map(Mapper::convertToOrderDetailResponseDto);
     }
 
-    public OrderDetailResponseDto createOrderDetail(Long orderId, OrderDetailRequestDto orderDetail) {
-        List<Order> orders = orderRepository.findAll();
-        OrderDetail orderD = new OrderDetail();
-        for(Order order : orders){
-            if(order.getOrderId().equals(orderId)) {
-                orderD.setOrderId(orderId);
-                orderD.setProductId(orderDetail.getProductId());
-                orderD.setQuantity(orderDetail.getQuantity());
-                orderD.setPrice(orderDetail.getPrice());
-                orderD.setTotal(orderDetail.getTotal());
-                return Mapper.convertToOrderDetailResponseDto(orderDetailRepository.save(orderD));
-            }
-        }
-        return null;
-    }
-
     public OrderDetailResponseDto updateOrderDetail(Long orderId, OrderDetailRequestDto orderDetail){
         Optional<OrderDetailResponseDto> optionalOrderDetail = getOrderDetailById(orderId);
         if(optionalOrderDetail.isPresent()){
@@ -55,14 +39,6 @@ public class OrderDetailService {
             return Mapper.convertToOrderDetailResponseDto(orderDetailRepository.save(orderDetailToUpdate));
         }
         return null;
-    }
-
-    public Boolean deleteOrderDetail(Long orderId) {
-        if (orderDetailRepository.existsById(orderId)) {
-            orderDetailRepository.deleteById(orderId);
-            return true;
-        }
-        return false;
     }
 
 }

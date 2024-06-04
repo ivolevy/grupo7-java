@@ -72,7 +72,7 @@ public class CategoryService {
     public Boolean addProductToCategory(Long categoryId, Long productId) {
         ProductsCategories productCategory = new ProductsCategories();
         List<Product> products = productRepository.findAll();
-        List<Long> productsId = products.stream().map(Product::getProductId).toList();
+        List<Long> productsId = products.stream().map(Product::getId).toList();
         if (!productsId.contains(productId) && !categoryRepository.existsById(categoryId)) {
             return false;
         }

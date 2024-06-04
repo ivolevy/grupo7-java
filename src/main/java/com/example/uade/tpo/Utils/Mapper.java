@@ -4,14 +4,13 @@ import com.example.uade.tpo.dtos.request.CartItemRequestDto;
 import com.example.uade.tpo.dtos.response.*;
 import com.example.uade.tpo.entity.*;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 public class Mapper {
 
     public static ProductResponseDto convertToProductResponseDto(Product product) {
         ProductResponseDto productDto = new ProductResponseDto();
-        productDto.setProductId(product.getProductId());
+        productDto.setProductId(product.getId());
         productDto.setName(product.getName());
         productDto.setDescription(product.getDescription());
         productDto.setPrice(product.getPrice());
@@ -23,7 +22,7 @@ public class Mapper {
 
     public static SellerResponseDto convertToSellerResponseDto(Seller seller) {
         SellerResponseDto sellerDto = new SellerResponseDto();
-        sellerDto.setSellerId(seller.getSellerId());
+        sellerDto.setSellerId(seller.getId());
         sellerDto.setUserId(seller.getUserId());
         sellerDto.setStoreName(seller.getStoreName());
         sellerDto.setAddress(seller.getAddress());
@@ -32,7 +31,7 @@ public class Mapper {
 
     public static UserResponseDto convertToUserResponseDto(User user) {
         UserResponseDto userDto = new UserResponseDto();
-        userDto.setUserId(user.getUserId());
+        userDto.setUserId(user.getId());
         userDto.setName(user.getName());
         userDto.setLastName(user.getLastName());
         userDto.setEmail(user.getEmail());
@@ -41,14 +40,14 @@ public class Mapper {
 
     public static CategoryResponseDto convertToCategoryResponseDto(Category category) {
         CategoryResponseDto categoryDto = new CategoryResponseDto();
-        categoryDto.setCategoryId(category.getCategoryId());
+        categoryDto.setCategoryId(category.getId());
         categoryDto.setName(category.getName());
         return categoryDto;
     }
 
     public static PaymentResponseDto convertToPaymentResponseDto(Payment payment) {
         PaymentResponseDto paymentDto = new PaymentResponseDto();
-        paymentDto.setPaymentId(payment.getPaymentId());
+        paymentDto.setPaymentId(payment.getId());
         paymentDto.setOrderId(payment.getOrderId());
         paymentDto.setAmount(payment.getPaymentAmount());
         paymentDto.setPaymentMethodId(payment.getPaymentMethodId());
@@ -59,7 +58,7 @@ public class Mapper {
 
     public static OrderResponseDto convertToOrderResponseDto(Order order) {
         OrderResponseDto orderDto = new OrderResponseDto();
-        orderDto.setOrderId(order.getOrderId());
+        orderDto.setOrderId(order.getId());
         orderDto.setUserId(order.getUserId());
         orderDto.setTotalAmount(order.getTotalAmount());
         orderDto.setOrderDate(order.getOrderDate());
@@ -69,7 +68,7 @@ public class Mapper {
 
     public static OrderDetailResponseDto convertToOrderDetailResponseDto(OrderDetail orderDetail) {
         OrderDetailResponseDto orderDetailDto = new OrderDetailResponseDto();
-        orderDetailDto.setOrderDetailId(orderDetail.getOrderDetailId());
+        orderDetailDto.setOrderDetailId(orderDetail.getId());
         orderDetailDto.setOrderId(orderDetail.getOrderId());
         orderDetailDto.setProductId(orderDetail.getProductId());
         orderDetailDto.setQuantity(orderDetail.getQuantity());
@@ -80,7 +79,7 @@ public class Mapper {
 
     public static DiscountResponseDto convertToDiscountResponseDto(Discount discount) {
         DiscountResponseDto discountDto = new DiscountResponseDto();
-        discountDto.setDiscountId(discount.getDiscountId());
+        discountDto.setDiscountId(discount.getId());
         discountDto.setCode(discount.getCode());
         discountDto.setDiscountValue(discount.getDiscountValue());
         discountDto.setStartDate(discount.getStartDate());
@@ -90,23 +89,10 @@ public class Mapper {
 
     public static CartResponseDto convertToCartResponseDto(Cart cart) {
         CartResponseDto cartDto = new CartResponseDto();
-        cartDto.setCartId(cart.getCartId());
+        cartDto.setCartId(cart.getId());
         cartDto.setUserId(cart.getUserId());
         return cartDto;
     }
 
-    public static Optional<CartResponseDto> convertToOptionalCartResponseDto(Cart cart) {
-        if(cart == null) {
-            return Optional.empty();
-        }
-        return Optional.of(convertToCartResponseDto(cart));
-    }
-
-    public static CartItem convertToCartItem(CartItemRequestDto cartItem) {
-        CartItem item = new CartItem();
-        item.setProductId(cartItem.getProductId());
-        item.setQuantity(cartItem.getQuantity());
-        return item;
-    }
 
 }

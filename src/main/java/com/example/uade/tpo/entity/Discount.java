@@ -12,7 +12,7 @@ public class Discount {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "discounts_seq")
     @SequenceGenerator(name = "discounts_seq", sequenceName = "discounts_seq", allocationSize = 1)
-    private Long discountId;
+    private Long id;
     @Column
     private String code;
     @Column
