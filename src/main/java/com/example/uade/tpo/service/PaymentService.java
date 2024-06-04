@@ -12,10 +12,7 @@ import com.example.uade.tpo.repository.IPaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -85,7 +82,7 @@ public class PaymentService {
     public PaymentResponseDto cancelPayment(Long paymentId) {
         Payment payment = paymentRepository.findById(paymentId).orElse(null);
         if (payment != null) {
-            if(payment.getPaymentStatus().equals("CONFIRMED")) {
+            if(!payment.getPaymentStatus().equals("CONFIRMED")) {
                 payment.setPaymentStatus("CANCELLED");
                 Payment savedPayment = paymentRepository.save(payment);
                 return Mapper.convertToPaymentResponseDto(savedPayment);
@@ -100,21 +97,17 @@ public class PaymentService {
     }
 
     public List<PaymentResponseDto> getPaymentHistory(Long userId) {
-        List<Order> orders = new ArrayList<>();
-        if(orderRepository.findByUserId(userId) == null){
-            return null;
+        List<Order> orders = orderRepository.findByUserId(userId);
+        if (orders == null || orders.isEmpty()) {
+            return Collections.emptyList();
         }
-        for(Order order : orderRepository.findAll()){
-            if(order.getUserId().equals(userId)){
-                orders.add(order);
-            }
-        }
+
         List<Payment> payments = new ArrayList<>();
-        for(Order order : orders){
-            payments.add(paymentRepository.findByOrderId(order.getId()));
+        for (Order order : orders) {
+            List<Payment> orderPayments = paymentRepository.findAllByOrderId(order.getId());
+            payments.addAll(orderPayments);
         }
+
         return payments.stream().map(Mapper::convertToPaymentResponseDto).collect(Collectors.toList());
     }
-
-
 }

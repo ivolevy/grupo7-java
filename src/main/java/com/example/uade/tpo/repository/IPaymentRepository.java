@@ -10,4 +10,6 @@ public interface IPaymentRepository extends JpaRepository<Payment, Long> {
     @Query("SELECT p.id FROM Payment p")
     List<Long> getAllPaymentIds();
     Payment findByOrderId(Long orderId);
+
+    List<Payment> findAllByOrderId(Long id);
 }

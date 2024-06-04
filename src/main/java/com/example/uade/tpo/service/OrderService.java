@@ -107,7 +107,7 @@ public class OrderService {
             Order order = optionalOrder.get();
             if(order.getStatus().equals("PENDING")) {
                 Optional<Discount> optionalDiscount = discountRepository.findByCode(code);
-                if(order.getDiscountCodeApplied()) {
+                if(!order.getDiscountCodeApplied()) {
                     if (optionalDiscount.isPresent()) {
                         Discount discount = optionalDiscount.get();
                         if (discount.getStartDate().before(new Date()) || discount.getEndDate().after(new Date())) {
