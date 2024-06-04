@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -34,6 +35,12 @@ public class PaymentService {
                 return null;
             }
         }
+        if(orderRepository.findById(orderId).isEmpty()){
+            return null;
+        }
+        if(Objects.requireNonNull(orderRepository.findById(orderId).orElse(null)).getStatus().equals("PAID")){
+            return null;
+        }
         payment.setOrderId(orderId);
         payment.setPaymentAmount(orderRepository.findById(orderId).get().getTotalAmount());
         payment.setPaymentStatus("PENDING");
@@ -52,12 +59,6 @@ public class PaymentService {
 
     public PaymentResponseDto confirmCardPayment(Long paymentId, CardRequestDto cardPaymentMethod) {
         CreditCard card = new CreditCard();
-        List<Long> paymentIds = paymentRepository.getAllPaymentIds();
-        for (Long id : paymentIds) {
-            if (id.equals(paymentId)) {
-                return null;
-            }
-        }
         card.setCardNumber(cardPaymentMethod.getCardNumber());
         card.setNameOnCard(cardPaymentMethod.getNameOnCard());
         card.setSecurityCode(cardPaymentMethod.getSecurityCode());
@@ -84,9 +85,11 @@ public class PaymentService {
     public PaymentResponseDto cancelPayment(Long paymentId) {
         Payment payment = paymentRepository.findById(paymentId).orElse(null);
         if (payment != null) {
-            payment.setPaymentStatus("CANCELLED");
-            Payment savedPayment = paymentRepository.save(payment);
-            return Mapper.convertToPaymentResponseDto(savedPayment);
+            if(payment.getPaymentStatus().equals("CONFIRMED")) {
+                payment.setPaymentStatus("CANCELLED");
+                Payment savedPayment = paymentRepository.save(payment);
+                return Mapper.convertToPaymentResponseDto(savedPayment);
+            }
         }
         return null;
     }

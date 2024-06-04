@@ -22,4 +22,6 @@ public class Order {
         private String status;
         @Column(name = "total_amount")
         private Double totalAmount;
+        @Column(name = "discount_code_applied")
+        private Boolean discountCodeApplied = false;
 }

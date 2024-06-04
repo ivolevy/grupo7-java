@@ -17,5 +17,5 @@ public class OrderResponseDto {
     double totalAmount;
     Date orderDate;
     String status;
-
+    boolean discountCodeApplied;
 }

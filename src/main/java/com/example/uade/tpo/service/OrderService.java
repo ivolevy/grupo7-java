@@ -2,12 +2,14 @@ package com.example.uade.tpo.service;
 
 import com.example.uade.tpo.Utils.Mapper;
 import com.example.uade.tpo.dtos.response.OrderResponseDto;
+import com.example.uade.tpo.dtos.response.ProductResponseDto;
 import com.example.uade.tpo.entity.*;
 import com.example.uade.tpo.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -70,10 +72,13 @@ public class OrderService {
                 orderDetail.setProductId(cartItem.getProductId());
                 orderDetail.setQuantity(cartItem.getQuantity());
                 orderDetail.setPrice(productRepository.findById(cartItem.getProductId()).get().getPrice());
+                orderDetail.setTotal(orderDetail.getQuantity() * orderDetail.getPrice());
                 orderDetails.add(orderDetail);
             }
 
-            double totalAmount = orderDetails.stream().mapToDouble(detail -> detail.getQuantity() * detail.getPrice()).sum();
+            BigDecimal bd = BigDecimal.valueOf(orderDetails.stream().mapToDouble
+                    (detail -> detail.getQuantity() * detail.getPrice()).sum()).setScale(2, BigDecimal.ROUND_HALF_UP);
+            double totalAmount = bd.doubleValue();
             order.setTotalAmount(totalAmount);
 
             orderRepository.save(order);
@@ -102,13 +107,16 @@ public class OrderService {
             Order order = optionalOrder.get();
             if(order.getStatus().equals("PENDING")) {
                 Optional<Discount> optionalDiscount = discountRepository.findByCode(code);
-                if (optionalDiscount.isPresent()) {
-                    Discount discount = optionalDiscount.get();
-                    if (discount.getStartDate().before(new Date()) || discount.getEndDate().after(new Date())) {
-                        double discountInPercentage = (double) discount.getDiscountValue() / 100;
-                        order.setTotalAmount(order.getTotalAmount() - (order.getTotalAmount() * discountInPercentage));
-                        orderRepository.save(order);
-                        return Mapper.convertToOrderResponseDto(order);
+                if(order.getDiscountCodeApplied()) {
+                    if (optionalDiscount.isPresent()) {
+                        Discount discount = optionalDiscount.get();
+                        if (discount.getStartDate().before(new Date()) || discount.getEndDate().after(new Date())) {
+                            double discountInPercentage = (double) discount.getDiscountValue() / 100;
+                            order.setTotalAmount(order.getTotalAmount() - (order.getTotalAmount() * discountInPercentage));
+                            order.setDiscountCodeApplied(true);
+                            orderRepository.save(order);
+                            return Mapper.convertToOrderResponseDto(order);
+                        }
                     }
                 }
             }
