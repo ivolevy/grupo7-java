@@ -2,7 +2,6 @@ package com.example.uade.tpo.controller;
 
 import com.example.uade.tpo.dtos.request.CardRequestDto;
 import com.example.uade.tpo.dtos.request.MPRequestDto;
-import com.example.uade.tpo.dtos.request.PaymentRequestDto;
 import com.example.uade.tpo.dtos.response.PaymentResponseDto;
 import com.example.uade.tpo.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
