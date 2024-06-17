@@ -1,4 +1,4 @@
-package com.example.uade.tpo.dtos.request;
+package com.example.uade.tpo.dtos.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,10 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class CartItemRequestDto {
+public class OrderItemResponseDto {
+    Long id;
     Long productId;
+    String productName;
     Integer quantity;
+    Double price;
 }

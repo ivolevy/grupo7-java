@@ -11,14 +11,4 @@ import java.util.Optional;
 
 @Repository
 public interface IDiscountRepository extends JpaRepository<Discount, Long> {
-    @Query("SELECT CASE WHEN COUNT(d) > 0 THEN TRUE ELSE FALSE END FROM Discount d WHERE d.code = :code")
-
-    boolean existsByCode(String code);
-
-    @Modifying
-    @Transactional
-    @Query("DELETE FROM Discount d WHERE d.code = :code")
-    void deleteByCode(String code);
-
-    Optional<Discount> findByCode(String code);
 }

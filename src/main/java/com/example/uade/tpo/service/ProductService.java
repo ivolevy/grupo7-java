@@ -3,13 +3,17 @@ package com.example.uade.tpo.service;
 import com.example.uade.tpo.Utils.Mapper;
 import com.example.uade.tpo.dtos.request.ProductRequestDto;
 import com.example.uade.tpo.dtos.response.ProductResponseDto;
+import com.example.uade.tpo.entity.Category;
 import com.example.uade.tpo.entity.Product;
-import com.example.uade.tpo.entity.Seller;
+import com.example.uade.tpo.entity.Role;
+import com.example.uade.tpo.entity.User;
+import com.example.uade.tpo.repository.ICategoryRepository;
 import com.example.uade.tpo.repository.IProductRepository;
-import com.example.uade.tpo.repository.ISellerRepository;
+import com.example.uade.tpo.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,92 +24,41 @@ public class ProductService {
     private IProductRepository productRepository;
 
     @Autowired
-    private ProductCategoriesService productCategoriesService;
+    private IUserRepository userRepository;
 
     @Autowired
-    private ISellerRepository sellerRepository;
+    private ICategoryRepository categoryRepository;
 
-    public List<ProductResponseDto> getProducts() {
+    public List<ProductResponseDto> getAllProducts() {
         return productRepository.findAll().stream().map
                 (Mapper::convertToProductResponseDto).collect(Collectors.toList());
     }
 
-    public Optional<ProductResponseDto> getProductById(Long productId) {
-        return productRepository.findById(productId).map(Mapper::convertToProductResponseDto);
-    }
-
-    public ProductResponseDto createProduct(ProductRequestDto productDto) {
+    public ProductResponseDto createProduct(Long userId, ProductRequestDto productDto) {
         Product product = new Product();
-        List<Product> products = productRepository.findAll();
-        for (Product p : products) {
-            if (p.getName().equals(productDto.getName())) {
-                return null;
+        Optional<User> user = userRepository.findById(userId);
+        if(user.isPresent()){
+            product.setName(productDto.getName());
+            product.setDescription(productDto.getDescription());
+            product.setBrand(productDto.getBrand());
+            product.setPrice(productDto.getPrice());
+            product.setStock(productDto.getStock());
+            if(!user.get().getRole().equals(Role.ROLE_SELLER)){
+                user.get().setRole(Role.ROLE_SELLER);
             }
-        }
-        product.setName(productDto.getName());
-        product.setDescription(productDto.getDescription());
-        product.setBrand(productDto.getBrand());
-        product.setPrice(productDto.getPrice());
-        product.setStock(productDto.getStock());
-        product.setSellerId(productDto.getSellerId());
-        product.setImage(productDto.getImage());
+            product.setSeller(user.get());
 
-        Product savedProduct = productRepository.save(product);
-
-        return Mapper.convertToProductResponseDto(savedProduct);
-    }
-
-    public ProductResponseDto updateProduct(Long productId, ProductRequestDto productDetails) {
-        Optional<Product> productOptional = productRepository.findById(productId);
-        List<Product> products = productRepository.findAll();
-        for (Product p : products) {
-            if (p.getName().equals(productDetails.getName())) {
-                return null;
+            List<Category> categories = new ArrayList<>();
+            for(Long categoryId : productDto.getCategoryIds()){
+                Optional<Category> category = categoryRepository.findById(categoryId);
+                category.ifPresent(categories::add);
             }
+            product.setCategories(categories);
+            Product savedProduct = productRepository.save(product);
+            return Mapper.convertToProductResponseDto(savedProduct);
         }
-        if (productOptional.isPresent()) {
-            Product product = productOptional.get();
-            product.setName(productDetails.getName());
-            product.setBrand(productDetails.getBrand());
-            product.setDescription(productDetails.getDescription());
-            product.setPrice(productDetails.getPrice());
-            product.setStock(productDetails.getStock());
-            product.setSellerId(productDetails.getSellerId());
-            product.setImage(productDetails.getImage());
-            return Mapper.convertToProductResponseDto(productRepository.save(product));
-        }
-        return null;
+        return null; //No se encontro usuario con ese id
     }
 
-    public Boolean deleteProduct(Long productId) {
-        if (productRepository.existsById(productId)) {
-            productRepository.deleteById(productId);
-            productCategoriesService.deleteProduct(productId);
-            return true;
-        }
-        return false;
-    }
-
-    public List<ProductResponseDto> getProductsBySellerId(Long sellerId) {
-        List<Long> sellerIds = sellerRepository.findAll().stream().map(Seller::getId).toList();
-        if (!sellerIds.contains(sellerId)) {
-            return null;
-        }
-        return getProducts().stream()
-                .filter(product -> product.getSellerId().equals(sellerId))
-                .collect(Collectors.toList());
-    }
-
-    public List<ProductResponseDto> getProductsByCategoryId(Long categoryId) {
-        List<Long> productsIds = productCategoriesService.getProductsIdByCategoryId(categoryId);
-        if(productsIds == null || productsIds.isEmpty()){
-            return null;
-        }
-        return productsIds.stream()
-                .map(this::getProductById)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
-    }
 
 }

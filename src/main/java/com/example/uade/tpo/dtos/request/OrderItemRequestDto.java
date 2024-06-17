@@ -6,11 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class OrderDetailRequestDto {
+public class OrderItemRequestDto {
+    Long productId;
     Integer quantity;
-    Double price;
-    Double total;
 }

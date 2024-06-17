@@ -1,8 +1,10 @@
 package com.example.uade.tpo.service;
 
 import com.example.uade.tpo.Utils.Mapper;
+import com.example.uade.tpo.dtos.request.ChangeRoleRequestDto;
 import com.example.uade.tpo.dtos.request.UserRequestDto;
 import com.example.uade.tpo.dtos.response.UserResponseDto;
+import com.example.uade.tpo.entity.Role;
 import com.example.uade.tpo.entity.User;
 import com.example.uade.tpo.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +29,12 @@ public class UserService {
     }
 
     public UserResponseDto createUser(UserRequestDto userDto) {
-        User user = new User();
-        List<User> users = userRepository.findAll();
-        for (User u : users) {
-            if (u.getEmail().equals(userDto.getEmail())) {
-                return null;
-            }
+        if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
+            return null;
         }
-        user.setName(userDto.getName());
+        User user = new User();
+        user.setUserName(userDto.getUsername());
+        user.setFirstName(userDto.getFirstname());
         user.setLastName(userDto.getLastName());
         user.setEmail(userDto.getEmail());
         user.setPassword(userDto.getPassword());
@@ -42,22 +42,17 @@ public class UserService {
     }
 
     public UserResponseDto updateUser(Long userId, UserRequestDto userDetails) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        List<User> users = userRepository.findAll();
-        for (User u : users) {
-            if (u.getEmail().equals(userDetails.getEmail())) {
-                return null;
-            }
+        if (userRepository.findByEmail(userDetails.getEmail()).isPresent()) {
+            return null;
         }
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            user.setName(userDetails.getName());
+        return userRepository.findById(userId).map(user -> {
+            user.setUserName(userDetails.getUsername());
+            user.setFirstName(userDetails.getFirstname());
             user.setLastName(userDetails.getLastName());
             user.setEmail(userDetails.getEmail());
             user.setPassword(userDetails.getPassword());
             return Mapper.convertToUserResponseDto(userRepository.save(user));
-        }
-        return null;
+        }).orElse(null);
     }
 
     public Boolean deleteUser(Long userId) {
@@ -68,12 +63,10 @@ public class UserService {
         return false;
     }
 
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
+    public void changeRole(ChangeRoleRequestDto request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        user.setRole(Role.valueOf(request.getNewRole()));
+        userRepository.save(user);
     }
-
-    public boolean existsByUserName(String userName) {
-        return userRepository.existsByUserName(userName);
-    }
-
 }

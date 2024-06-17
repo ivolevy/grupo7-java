@@ -1,11 +1,10 @@
-package com.example.uade.tpo.service;
+package com.example.uade.tpo.controller.auth;
 
-import com.example.uade.tpo.controller.auth.AuthenticationRequest;
-import com.example.uade.tpo.controller.auth.AuthenticationResponse;
-import com.example.uade.tpo.controller.auth.RegisterRequest;
 import com.example.uade.tpo.controller.config.JwtService;
+import com.example.uade.tpo.entity.Role;
 import com.example.uade.tpo.entity.User;
 import com.example.uade.tpo.repository.IUserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
@@ -17,17 +16,23 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-        private final IUserRepository repository;
-        private final PasswordEncoder passwordEncoder;
-        private final JwtService jwtService;
-        private final AuthenticationManager authenticationManager;
+        @Autowired
+        private IUserRepository repository;
+        @Autowired
+        private PasswordEncoder passwordEncoder;
+        @Autowired
+        private JwtService jwtService;
+        @Autowired
+        private AuthenticationManager authenticationManager;
 
         public AuthenticationResponse register(RegisterRequest request) {
                 var user = User.builder()
                                 .firstName(request.getFirstname())
                                 .lastName(request.getLastname())
                                 .email(request.getEmail())
+                                .userName(request.getUsername())
                                 .password(passwordEncoder.encode(request.getPassword()))
+                                .role(Role.ROLE_USER)
                                 .build();
 
                 repository.save(user);

@@ -1,9 +1,12 @@
 package com.example.uade.tpo.dtos.response;
 
+import com.example.uade.tpo.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -16,6 +19,6 @@ public class ProductResponseDto {
     String brand;
     Double price;
     Integer stock;
-    Long sellerId;
-    String image;
+    String sellerName;
+    List<Long> categoryIds;
 }

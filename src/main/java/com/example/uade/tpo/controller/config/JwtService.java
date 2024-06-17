@@ -6,6 +6,7 @@ import java.util.function.Function;
 
 import javax.crypto.SecretKey;
 
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
@@ -19,7 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class JwtService {
     @Value("${application.security.jwt.secretKey}")
     private String secretKey;
-    @Value("${application.security.jwt.expiration}")
+    @Value("${application.security.jwt.expirationTime}")
     private long jwtExpiration;
 
     public String generateToken(UserDetails userDetails) {

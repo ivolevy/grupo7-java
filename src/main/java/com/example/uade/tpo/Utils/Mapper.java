@@ -2,7 +2,9 @@ package com.example.uade.tpo.Utils;
 
 import com.example.uade.tpo.dtos.response.*;
 import com.example.uade.tpo.entity.*;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class Mapper {
 
     public static ProductResponseDto convertToProductResponseDto(Product product) {
@@ -10,28 +12,21 @@ public class Mapper {
         productDto.setProductId(product.getId());
         productDto.setName(product.getName());
         productDto.setDescription(product.getDescription());
+        productDto.setBrand(product.getBrand());
         productDto.setPrice(product.getPrice());
         productDto.setStock(product.getStock());
-        productDto.setSellerId(product.getSellerId());
-        productDto.setImage(product.getImage());
+        productDto.setSellerName(product.getSeller().getUsername());
         return productDto;
-    }
-
-    public static SellerResponseDto convertToSellerResponseDto(Seller seller) {
-        SellerResponseDto sellerDto = new SellerResponseDto();
-        sellerDto.setSellerId(seller.getId());
-        sellerDto.setUserId(seller.getUserId());
-        sellerDto.setStoreName(seller.getStoreName());
-        sellerDto.setAddress(seller.getAddress());
-        return sellerDto;
     }
 
     public static UserResponseDto convertToUserResponseDto(User user) {
         UserResponseDto userDto = new UserResponseDto();
         userDto.setUserId(user.getId());
-        userDto.setName(user.getName());
+        userDto.setUsername(user.getUsername());
+        userDto.setFirstname(user.getFirstName());
         userDto.setLastName(user.getLastName());
         userDto.setEmail(user.getEmail());
+        userDto.setPassword(user.getPassword());
         return userDto;
     }
 
@@ -42,63 +37,38 @@ public class Mapper {
         return categoryDto;
     }
 
-    public static PaymentResponseDto convertToPaymentResponseDto(Payment payment) {
-        PaymentResponseDto paymentDto = new PaymentResponseDto();
-        paymentDto.setPaymentId(payment.getId());
-        paymentDto.setOrderId(payment.getOrderId());
-        paymentDto.setAmount(payment.getPaymentAmount());
-        paymentDto.setStatus(payment.getPaymentStatus());
-        paymentDto.setDate(payment.getPaymentDate());
-        return paymentDto;
-    }
 
-    public static OrderResponseDto convertToOrderResponseDto(Order order) {
-        OrderResponseDto orderDto = new OrderResponseDto();
-        orderDto.setOrderId(order.getId());
-        orderDto.setUserId(order.getUserId());
-        orderDto.setTotalAmount(order.getTotalAmount());
-        orderDto.setOrderDate(order.getOrderDate());
-        orderDto.setStatus(order.getStatus());
-        return orderDto;
-    }
-
-    public static OrderDetailResponseDto convertToOrderDetailResponseDto(OrderDetail orderDetail) {
-        OrderDetailResponseDto orderDetailDto = new OrderDetailResponseDto();
-        orderDetailDto.setOrderDetailId(orderDetail.getId());
-        orderDetailDto.setOrderId(orderDetail.getOrderId());
-        orderDetailDto.setProductId(orderDetail.getProductId());
-        orderDetailDto.setQuantity(orderDetail.getQuantity());
-        orderDetailDto.setPrice(orderDetail.getPrice());
-        orderDetailDto.setTotal(orderDetail.getTotal());
-        return orderDetailDto;
-    }
-
-    public static DiscountResponseDto convertToDiscountResponseDto(Discount discount) {
+    public static DiscountResponseDto convertToDiscountResponseDto(Discount save) {
         DiscountResponseDto discountDto = new DiscountResponseDto();
-        discountDto.setDiscountId(discount.getId());
-        discountDto.setCode(discount.getCode());
-        discountDto.setDiscountValue(discount.getDiscountValue());
-        discountDto.setStartDate(discount.getStartDate());
-        discountDto.setEndDate(discount.getEndDate());
+        discountDto.setDiscountId(save.getId());
+        discountDto.setCode(save.getCode());
+        discountDto.setPercentage(save.getPercentage());
+        discountDto.setStartDate(save.getStartDate());
+        discountDto.setEndDate(save.getEndDate());
+        discountDto.setActive(save.isActive());
         return discountDto;
     }
 
-    public static CartResponseDto convertToCartResponseDto(Cart cart) {
-        CartResponseDto cartDto = new CartResponseDto();
-        cartDto.setCartId(cart.getId());
-        cartDto.setUserId(cart.getUserId());
-        return cartDto;
+
+    public static OrderResponseDto convertToOrderResponseDto(Order savedOrder) {
+        OrderResponseDto orderDto = new OrderResponseDto();
+        orderDto.setId(savedOrder.getId());
+        orderDto.setUser(savedOrder.getUser());
+        orderDto.setOrderDate(savedOrder.getOrderDate());
+        orderDto.setTotalAmount(savedOrder.getTotalAmount());
+        for (OrderItem orderItem : savedOrder.getOrderItems()) {
+            orderDto.getOrderItems().add(convertToOrderItemResponseDto(orderItem));
+        }
+        return orderDto;
     }
 
-    public static OrderDetail convertToOrderDetail(OrderDetailResponseDto orderDetailRequestDto) {
-        OrderDetail orderDetail = new OrderDetail();
-        orderDetail.setId(orderDetailRequestDto.getOrderDetailId());
-        orderDetail.setOrderId(orderDetailRequestDto.getOrderId());
-        orderDetail.setProductId(orderDetailRequestDto.getProductId());
-        orderDetail.setQuantity(orderDetailRequestDto.getQuantity());
-        orderDetail.setPrice(orderDetailRequestDto.getPrice());
-        orderDetail.setTotal(orderDetailRequestDto.getTotal());
-        return orderDetail;
+    public static OrderItemResponseDto convertToOrderItemResponseDto(OrderItem orderItem) {
+        OrderItemResponseDto orderItemDto = new OrderItemResponseDto();
+        orderItemDto.setId(orderItem.getId());
+        orderItemDto.setProductId(orderItem.getProduct().getId());
+        orderItemDto.setProductName(orderItem.getProduct().getName());
+        orderItemDto.setQuantity(orderItem.getQuantity());
+        orderItemDto.setPrice(orderItem.getUnitPrice());
+        return orderItemDto;
     }
-
 }

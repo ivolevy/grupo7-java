@@ -1,10 +1,13 @@
 package com.example.uade.tpo.dtos.request;
 
+import com.example.uade.tpo.entity.User;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -16,6 +19,5 @@ public class ProductRequestDto {
     String brand;
     Double price;
     Integer stock;
-    Long sellerId;
-    String image;
+    List<Long> categoryIds;
 }

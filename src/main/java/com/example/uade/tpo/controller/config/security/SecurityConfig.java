@@ -28,10 +28,20 @@ public class SecurityConfig {
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http
                                 .csrf(AbstractHttpConfigurer::disable)
-                                .authorizeHttpRequests(req -> req.requestMatchers("/api/auth/**")
-                                                .permitAll()
-                                                .anyRequest()
-                                                .authenticated())
+                                .authorizeHttpRequests(req -> req
+                                        .requestMatchers(
+                                                "/api/auth/**",
+                                                "/swagger-ui/**",
+                                                "/v3/api-docs/**",
+                                                "/swagger-ui.html",
+                                                "/swagger-ui/index.html",
+                                                "/v3/api-docs/swagger-config",
+                                                "/api/order/**",
+                                                "/api/payment/**",
+                                                "/api/product/**",
+                                                "/api/discount/**"
+                                        ).permitAll()
+                                        .anyRequest().authenticated())
                                 .exceptionHandling(exc -> exc
                                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                                         .accessDeniedHandler(new CustomAccessDeniedHandler()))

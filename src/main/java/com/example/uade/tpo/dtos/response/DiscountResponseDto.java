@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -14,7 +14,8 @@ import java.util.Date;
 public class DiscountResponseDto {
     Long discountId;
     String code;
-    Integer discountValue;
-    Date startDate;
-    Date endDate;
+    Double percentage;
+    LocalDate startDate;
+    LocalDate endDate;
+    boolean active;
 }

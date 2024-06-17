@@ -3,7 +3,9 @@ package com.example.uade.tpo.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -14,14 +16,13 @@ public class Order {
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "orders_seq")
         @SequenceGenerator(name = "orders_seq", sequenceName = "orders_seq", allocationSize = 1)
         private Long id;
-        @Column(name = "user_id", nullable = false)
-        private Long userId;
-        @Column(name = "order_date")
-        private Date orderDate;
-        @Column
-        private String status;
-        @Column(name = "total_amount")
+        @ManyToOne
+        @JoinColumn(name = "user_id", nullable = false)
+        private User user;
+        @Column(name = "order_date", nullable = false)
+        private LocalDate orderDate;
+        @Column(name = "total_amount", nullable = false)
         private Double totalAmount;
-        @Column(name = "discount_code_applied")
-        private Boolean discountCodeApplied = false;
+        @OneToMany(mappedBy = "order")
+        private List<OrderItem> orderItems;
 }
