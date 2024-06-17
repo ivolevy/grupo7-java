@@ -1,5 +1,6 @@
 package com.example.uade.tpo.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +20,7 @@ public class OrderItem {
     private Long id;
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
+    @JsonBackReference
     private Order order;
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)

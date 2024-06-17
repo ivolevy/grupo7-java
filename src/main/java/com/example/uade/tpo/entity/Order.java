@@ -1,5 +1,7 @@
 package com.example.uade.tpo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -23,6 +25,7 @@ public class Order {
         private LocalDate orderDate;
         @Column(name = "total_amount", nullable = false)
         private Double totalAmount;
-        @OneToMany(mappedBy = "order")
+        @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+        @JsonManagedReference
         private List<OrderItem> orderItems;
 }

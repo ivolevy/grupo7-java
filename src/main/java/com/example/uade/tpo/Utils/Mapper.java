@@ -4,6 +4,8 @@ import com.example.uade.tpo.dtos.response.*;
 import com.example.uade.tpo.entity.*;
 import lombok.experimental.UtilityClass;
 
+import java.util.stream.Collectors;
+
 @UtilityClass
 public class Mapper {
 
@@ -53,12 +55,14 @@ public class Mapper {
     public static OrderResponseDto convertToOrderResponseDto(Order savedOrder) {
         OrderResponseDto orderDto = new OrderResponseDto();
         orderDto.setId(savedOrder.getId());
-        orderDto.setUser(savedOrder.getUser());
+        orderDto.setUser(convertToUserResponseDto(savedOrder.getUser()));
         orderDto.setOrderDate(savedOrder.getOrderDate());
         orderDto.setTotalAmount(savedOrder.getTotalAmount());
-        for (OrderItem orderItem : savedOrder.getOrderItems()) {
-            orderDto.getOrderItems().add(convertToOrderItemResponseDto(orderItem));
-        }
+        orderDto.setOrderItems(
+                savedOrder.getOrderItems().stream()
+                .map(Mapper::convertToOrderItemResponseDto)
+                .collect(Collectors.toList())
+        );
         return orderDto;
     }
 

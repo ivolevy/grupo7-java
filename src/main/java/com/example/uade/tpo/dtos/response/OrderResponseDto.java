@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +17,7 @@ import java.util.List;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class OrderResponseDto {
     Long Id;
-    User user;
+    UserResponseDto user;
     LocalDate orderDate;
     Double totalAmount;
     List<OrderItemResponseDto> orderItems;
