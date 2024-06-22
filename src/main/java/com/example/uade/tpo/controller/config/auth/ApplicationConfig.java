@@ -1,4 +1,4 @@
-package com.example.uade.tpo.controller.config;
+package com.example.uade.tpo.controller.config.auth;
 
 import com.example.uade.tpo.repository.IUserRepository;
 import org.springframework.context.annotation.Bean;

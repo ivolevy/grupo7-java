@@ -1,6 +1,6 @@
 package com.example.uade.tpo.controller.auth;
 
-import com.example.uade.tpo.controller.config.JwtService;
+import com.example.uade.tpo.controller.config.auth.JwtService;
 import com.example.uade.tpo.entity.Role;
 import com.example.uade.tpo.entity.User;
 import com.example.uade.tpo.repository.IUserRepository;
