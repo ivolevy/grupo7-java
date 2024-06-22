@@ -33,7 +33,6 @@ public class UserService {
             return null;
         }
         User user = new User();
-        user.setUserName(userDto.getUsername());
         user.setFirstName(userDto.getFirstname());
         user.setLastName(userDto.getLastName());
         user.setEmail(userDto.getEmail());
@@ -46,7 +45,6 @@ public class UserService {
             return null;
         }
         return userRepository.findById(userId).map(user -> {
-            user.setUserName(userDetails.getUsername());
             user.setFirstName(userDetails.getFirstname());
             user.setLastName(userDetails.getLastName());
             user.setEmail(userDetails.getEmail());

@@ -30,7 +30,6 @@ public class AuthenticationService {
                                 .firstName(request.getFirstname())
                                 .lastName(request.getLastname())
                                 .email(request.getEmail())
-                                .userName(request.getUsername())
                                 .password(passwordEncoder.encode(request.getPassword()))
                                 .role(Role.ROLE_USER)
                                 .build();

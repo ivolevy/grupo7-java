@@ -24,7 +24,6 @@ public class Mapper {
     public static UserResponseDto convertToUserResponseDto(User user) {
         UserResponseDto userDto = new UserResponseDto();
         userDto.setUserId(user.getId());
-        userDto.setUsername(user.getUsername());
         userDto.setFirstname(user.getFirstName());
         userDto.setLastName(user.getLastName());
         userDto.setEmail(user.getEmail());
