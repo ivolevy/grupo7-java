@@ -17,8 +17,10 @@ public class ProductResponseDto {
     String name;
     String description;
     String brand;
+    String category;
     Double price;
+    String image;
     Integer stock;
-    String sellerName;
-    List<Long> categoryIds;
+    boolean isInDiscount;
+    Double discountPercentage;
 }

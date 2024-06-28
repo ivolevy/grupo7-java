@@ -15,25 +15,25 @@ public class Product {
     private Long id;
     @Column(nullable = false, unique = true)
     private String name;
-    @Column
+    @Column (nullable = false)
     private String description;
-    @Column
+    @Column (nullable = false)
     private String brand;
+    @Column (nullable = false)
+    private String category;
     @Column(nullable = false)
     private Double price;
+    @Column (nullable = false)
+    private String image;
     @Column(nullable = false)
     private Integer stock;
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User seller;
-    @ManyToMany
-    @JoinTable(
-            name = "product_categories",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id"),
-            uniqueConstraints = @UniqueConstraint(columnNames = {"product_id", "category_id"})
-    )
-    private List<Category> categories;
+    @Column
+    private boolean isInDiscount = false;
+    @Column
+    private Double discountPercentage;
 
-
+    public double discountPrice() {
+        price -= (price * discountPercentage / 100);
+        return price;
+    }
 }

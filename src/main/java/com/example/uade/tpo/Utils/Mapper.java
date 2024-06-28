@@ -15,9 +15,12 @@ public class Mapper {
         productDto.setName(product.getName());
         productDto.setDescription(product.getDescription());
         productDto.setBrand(product.getBrand());
+        productDto.setCategory(product.getCategory());
         productDto.setPrice(product.getPrice());
+        productDto.setImage(product.getImage());
         productDto.setStock(product.getStock());
-        productDto.setSellerName(product.getSeller().getUsername());
+        productDto.setInDiscount(product.isInDiscount());
+        productDto.setDiscountPercentage(product.getDiscountPercentage());
         return productDto;
     }
 
@@ -29,13 +32,6 @@ public class Mapper {
         userDto.setEmail(user.getEmail());
         userDto.setPassword(user.getPassword());
         return userDto;
-    }
-
-    public static CategoryResponseDto convertToCategoryResponseDto(Category category) {
-        CategoryResponseDto categoryDto = new CategoryResponseDto();
-        categoryDto.setCategoryId(category.getId());
-        categoryDto.setName(category.getName());
-        return categoryDto;
     }
 
 

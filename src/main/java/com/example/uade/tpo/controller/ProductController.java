@@ -29,9 +29,9 @@ public class  ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @PostMapping("/{userId}") //Create product
-    public ResponseEntity<ProductResponseDto> createProduct(@PathVariable Long userId, @RequestBody ProductRequestDto productDto) {
-        ProductResponseDto newProduct = productService.createProduct(userId, productDto);
+    @PostMapping("/create") //Create product
+    public ResponseEntity<ProductResponseDto> createProduct(@RequestBody ProductRequestDto productDto) {
+        ProductResponseDto newProduct = productService.createProduct(productDto);
         if (newProduct == null) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
@@ -47,8 +47,6 @@ public class  ProductController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
-
 
 }
 
