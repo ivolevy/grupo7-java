@@ -1,5 +1,13 @@
 package com.example.uade.tpo.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.example.uade.tpo.Utils.Mapper;
 import com.example.uade.tpo.dtos.request.ProductRequestDto;
 import com.example.uade.tpo.dtos.response.ProductResponseDto;
@@ -10,13 +18,6 @@ import com.example.uade.tpo.entity.User;
 import com.example.uade.tpo.repository.ICategoryRepository;
 import com.example.uade.tpo.repository.IProductRepository;
 import com.example.uade.tpo.repository.IUserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -58,6 +59,14 @@ public class ProductService {
             return Mapper.convertToProductResponseDto(savedProduct);
         }
         return null; //No se encontro usuario con ese id
+    }
+
+    public Boolean deleteProduct(Long productId){
+        if (productRepository.existsById(productId)){
+            productRepository.deleteById(productId);
+            return true;
+        }
+        return false;
     }
 
 
