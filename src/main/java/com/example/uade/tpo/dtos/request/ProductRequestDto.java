@@ -19,7 +19,6 @@ public class ProductRequestDto {
     String brand;
     String category;
     Double price;
-    String image;
     Integer stock;
     boolean isInDiscount;
     Double discountPercentage;

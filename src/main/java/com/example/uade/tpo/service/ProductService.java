@@ -13,6 +13,7 @@ import com.example.uade.tpo.dtos.response.ProductResponseDto;
 import com.example.uade.tpo.entity.Product;
 import com.example.uade.tpo.repository.IProductRepository;
 import com.example.uade.tpo.repository.IUserRepository;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ProductService {
@@ -20,19 +21,19 @@ public class ProductService {
     private IProductRepository productRepository;
 
     public List<ProductResponseDto> getAllProducts() {
-        return productRepository.findAll().stream().map
-                (Mapper::convertToProductResponseDto).collect(Collectors.toList());
+        List<Product> products = productRepository.findAll();
+        return products.stream().map(Mapper::convertToProductResponseDto).collect(Collectors.toList());
     }
 
     @Transactional
-    public ProductResponseDto createProduct(ProductRequestDto productDto) {
+    public ProductResponseDto createProduct(ProductRequestDto productDto, MultipartFile image) throws Exception {
         Product product = new Product();
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
         product.setBrand(productDto.getBrand());
         product.setCategory(productDto.getCategory());
         product.setPrice(productDto.getPrice());
-        product.setImage(productDto.getImage());
+        product.setImage(image.getBytes());
         product.setStock(productDto.getStock());
 
         if(productDto.isInDiscount()){

@@ -19,7 +19,7 @@ public class ProductResponseDto {
     String brand;
     String category;
     Double price;
-    String image;
+    byte[] image;
     Integer stock;
     boolean isInDiscount;
     Double discountPercentage;
