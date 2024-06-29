@@ -4,6 +4,7 @@ import com.example.uade.tpo.dtos.response.*;
 import com.example.uade.tpo.entity.*;
 import lombok.experimental.UtilityClass;
 
+import java.util.Base64;
 import java.util.stream.Collectors;
 
 @UtilityClass
@@ -17,7 +18,7 @@ public class Mapper {
         productDto.setBrand(product.getBrand());
         productDto.setCategory(product.getCategory());
         productDto.setPrice(product.getPrice());
-        productDto.setImage(product.getImage());
+        productDto.setImage(Base64.getEncoder().encodeToString(product.getImage()));
         productDto.setStock(product.getStock());
         productDto.setInDiscount(product.isInDiscount());
         productDto.setDiscountPercentage(product.getDiscountPercentage());

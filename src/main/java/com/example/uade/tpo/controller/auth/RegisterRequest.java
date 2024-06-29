@@ -1,7 +1,5 @@
 package com.example.uade.tpo.controller.auth;
 
-import com.example.uade.tpo.entity.Role;
-
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

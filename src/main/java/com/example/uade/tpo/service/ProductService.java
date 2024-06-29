@@ -12,7 +12,6 @@ import com.example.uade.tpo.dtos.request.ProductRequestDto;
 import com.example.uade.tpo.dtos.response.ProductResponseDto;
 import com.example.uade.tpo.entity.Product;
 import com.example.uade.tpo.repository.IProductRepository;
-import com.example.uade.tpo.repository.IUserRepository;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -28,6 +27,27 @@ public class ProductService {
     @Transactional
     public ProductResponseDto createProduct(ProductRequestDto productDto, MultipartFile image) throws Exception {
         Product product = new Product();
+        product.setName(productDto.getName());
+        product.setDescription(productDto.getDescription());
+        product.setBrand(productDto.getBrand());
+        product.setCategory(productDto.getCategory());
+        product.setPrice(productDto.getPrice());
+        product.setImage(image.getBytes());
+        product.setStock(productDto.getStock());
+
+        if(productDto.isInDiscount()){
+            product.setInDiscount(true);
+            product.setDiscountPercentage(productDto.getDiscountPercentage());
+            product.setPrice(product.discountPrice());
+        }
+
+        Product savedProduct = productRepository.save(product);
+        return Mapper.convertToProductResponseDto(savedProduct);
+    }
+
+    @Transactional
+    public ProductResponseDto updateProduct(Long productId, ProductRequestDto productDto, MultipartFile image) throws Exception {
+        Product product = productRepository.findById(productId).orElseThrow(() -> new Exception("Product not found"));
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
         product.setBrand(productDto.getBrand());
