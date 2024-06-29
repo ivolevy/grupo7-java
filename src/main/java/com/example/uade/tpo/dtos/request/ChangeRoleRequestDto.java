@@ -12,7 +12,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ChangeRoleRequestDto {
     @NotBlank
-    private String email;
-    @NotBlank
-    private String newRole;
+    private String role;
 }

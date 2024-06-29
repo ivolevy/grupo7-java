@@ -32,6 +32,7 @@ public class Mapper {
         userDto.setLastName(user.getLastName());
         userDto.setEmail(user.getEmail());
         userDto.setPassword(user.getPassword());
+        userDto.setRole(user.getRole().name());
         return userDto;
     }
 

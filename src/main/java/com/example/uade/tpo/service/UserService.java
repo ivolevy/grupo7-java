@@ -2,7 +2,6 @@ package com.example.uade.tpo.service;
 
 import com.example.uade.tpo.Utils.Mapper;
 import com.example.uade.tpo.dtos.request.ChangeRoleRequestDto;
-import com.example.uade.tpo.dtos.request.UserRequestDto;
 import com.example.uade.tpo.dtos.response.UserResponseDto;
 import com.example.uade.tpo.entity.Role;
 import com.example.uade.tpo.entity.User;
@@ -24,36 +23,7 @@ public class UserService {
         return userRepository.findAll().stream().map(Mapper::convertToUserResponseDto).collect(Collectors.toList());
     }
 
-    public Optional<UserResponseDto> getUserById(Long userId) {
-        return userRepository.findById(userId).map(Mapper::convertToUserResponseDto);
-    }
-
-    public UserResponseDto createUser(UserRequestDto userDto) {
-        if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
-            return null;
-        }
-        User user = new User();
-        user.setFirstName(userDto.getFirstname());
-        user.setLastName(userDto.getLastName());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
-        return Mapper.convertToUserResponseDto(userRepository.save(user));
-    }
-
-    public UserResponseDto updateUser(Long userId, UserRequestDto userDetails) {
-        if (userRepository.findByEmail(userDetails.getEmail()).isPresent()) {
-            return null;
-        }
-        return userRepository.findById(userId).map(user -> {
-            user.setFirstName(userDetails.getFirstname());
-            user.setLastName(userDetails.getLastName());
-            user.setEmail(userDetails.getEmail());
-            user.setPassword(userDetails.getPassword());
-            return Mapper.convertToUserResponseDto(userRepository.save(user));
-        }).orElse(null);
-    }
-
-    public Boolean deleteUser(Long userId) {
+    public boolean deleteUser(Long userId) {
         if (userRepository.existsById(userId)) {
             userRepository.deleteById(userId);
             return true;
@@ -61,10 +31,17 @@ public class UserService {
         return false;
     }
 
-    public void changeRole(ChangeRoleRequestDto request) {
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        user.setRole(Role.valueOf(request.getNewRole()));
-        userRepository.save(user);
+    public boolean changeRole(Long userId, ChangeRoleRequestDto request) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            String newRole = request.getRole();
+            if (newRole.equals("ROLE_ADMIN") || newRole.equals("ROLE_USER")) {
+                user.get().setRole(Role.valueOf(newRole));
+                userRepository.save(user.get());
+                return true;
+            }
+        }
+        return false;
     }
+
 }

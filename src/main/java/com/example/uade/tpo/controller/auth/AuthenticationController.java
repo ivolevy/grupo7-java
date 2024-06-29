@@ -32,15 +32,4 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
-    @PostMapping("/change_role")
-    public ResponseEntity<Void> changeRole(@RequestBody ChangeRoleRequestDto request) {
-        userService.changeRole(request);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping
-    public ResponseEntity<List<UserResponseDto>> getUser() {
-        List<UserResponseDto> user = userService.getUsers();
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }
 }
