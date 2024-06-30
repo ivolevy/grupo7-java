@@ -1,10 +1,7 @@
 package com.example.uade.tpo.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -19,6 +16,7 @@ public class Discount {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "discounts_seq")
     @SequenceGenerator(name = "discounts_seq", sequenceName = "discounts_seq", allocationSize = 1)
     private Long id;
+    @Getter
     @Column(nullable = false, unique = true)
     private String code;
     @Column(nullable = false)

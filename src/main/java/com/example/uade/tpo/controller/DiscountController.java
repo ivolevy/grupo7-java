@@ -25,7 +25,7 @@ public class DiscountController {
         return new ResponseEntity<>(discounts, HttpStatus.OK);
     }
 
-    @PostMapping //Create discount
+    @PostMapping ("/create")//Create discount
     public ResponseEntity<?> createDiscount(@RequestBody DiscountRequestDto discount) {
         DiscountResponseDto newDiscount = discountService.createDiscount(discount);
         if(newDiscount == null) {
@@ -34,7 +34,7 @@ public class DiscountController {
         return new ResponseEntity<>(newDiscount, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{discountId}") //Update discount
+    @PutMapping("/update/{discountId}") //Update discount
     public ResponseEntity<?> updateDiscount
             (@PathVariable Long discountId,@RequestBody @Valid DiscountUpdateRequestDto discount) {
         DiscountResponseDto updatedDiscount = discountService.updateDiscount(discountId, discount);
@@ -44,7 +44,7 @@ public class DiscountController {
         return new ResponseEntity<>(updatedDiscount, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{discountId}") //Delete discount
+    @DeleteMapping("/delete/{discountId}") //Delete discount
     public ResponseEntity<?> deleteDiscount(@PathVariable Long discountId) {
         Boolean deleted = discountService.deleteDiscount(discountId);
         if(!deleted) {

@@ -26,12 +26,6 @@ public class DiscountService {
 
     public DiscountResponseDto createDiscount(DiscountRequestDto discountDto) {
         Discount discount = new Discount();
-        List<Discount> discounts = discountRepository.findAll();
-        for (Discount d : discounts) {
-            if (d.getCode().equals(discountDto.getCode())) {
-                return null;
-            }
-        }
         discount.setCode(discountDto.getCode());
         discount.setPercentage(discountDto.getPercentage());
         discount.setStartDate(discountDto.getStartDate());
@@ -41,18 +35,13 @@ public class DiscountService {
     }
 
     public DiscountResponseDto updateDiscount(Long discountId, DiscountUpdateRequestDto discountDetails) {
-        Optional<Discount> discountOptional = discountRepository.findById(discountId);
-        if (discountOptional.isPresent()) {
-            Discount discount = new Discount();
-            discount.setId(discountOptional.get().getId());
-            discount.setCode(discountOptional.get().getCode());
-            discount.setPercentage(discountDetails.getPercentage());
-            discount.setStartDate(discountDetails.getStartDate());
-            discount.setEndDate(discountDetails.getEndDate());
-            discount.setActive(discountDetails.getActive());
-            return Mapper.convertToDiscountResponseDto(discountRepository.save(discount));
-        }
-        return null;
+        Discount discount = discountRepository.findById(discountId).orElse(null);
+        assert discount != null;
+        discount.setPercentage(discountDetails.getPercentage());
+        discount.setStartDate(discountDetails.getStartDate());
+        discount.setEndDate(discountDetails.getEndDate());
+        discount.setActive(discountDetails.getActive());
+        return Mapper.convertToDiscountResponseDto(discountRepository.save(discount));
     }
 
     public Boolean deleteDiscount(Long discountId) {
