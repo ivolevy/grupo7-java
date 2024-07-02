@@ -18,9 +18,15 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<UserResponseDto>> getUsers() {
-        List<UserResponseDto> users = userService.getUsers();
-        return new ResponseEntity<>(users, HttpStatus.OK);
+    public ResponseEntity<List<UserResponseDto>> getUsers(@RequestHeader("Authorization") String token) {
+        Boolean validate = userService.validateRole(token);
+        if(validate){
+            List<UserResponseDto> users = userService.getUsers();
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(HttpStatus.LOCKED);
+        }
+
     }
 
     @PutMapping("/changeRole/{userId}")

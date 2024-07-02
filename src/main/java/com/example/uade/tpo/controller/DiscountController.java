@@ -24,9 +24,15 @@ public class DiscountController {
     private UserService userService;
 
     @GetMapping() //Get all discounts
-    public ResponseEntity<List<DiscountResponseDto>> getAllDiscounts() {
-        List<DiscountResponseDto> discounts = discountService.getAllDiscounts();
-        return new ResponseEntity<>(discounts, HttpStatus.OK);
+    public ResponseEntity<List<DiscountResponseDto>> getAllDiscounts(@RequestHeader("Authorization") String token) {
+        Boolean validate = userService.validateRole(token);
+        if(validate){
+            List<DiscountResponseDto> discounts = discountService.getAllDiscounts();
+            return new ResponseEntity<>(discounts, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(HttpStatus.LOCKED);
+        }
+
     }
 
     @PostMapping ("/create")//Create discount

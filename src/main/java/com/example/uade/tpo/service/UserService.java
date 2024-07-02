@@ -35,6 +35,7 @@ public class UserService {
     }
 
     public List<UserResponseDto> getUsers() {
+
         return userRepository.findAll().stream().map(Mapper::convertToUserResponseDto).collect(Collectors.toList());
     }
 
