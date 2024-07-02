@@ -3,6 +3,7 @@ package com.example.uade.tpo.controller;
 import com.example.uade.tpo.dtos.request.ProductRequestDto;
 import com.example.uade.tpo.dtos.response.ProductResponseDto;
 import com.example.uade.tpo.service.ProductService;
+import com.example.uade.tpo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,9 @@ import java.util.List;
 public class  ProductController {
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private UserService userService;
 
 
     @GetMapping
@@ -64,14 +68,18 @@ public class  ProductController {
             @RequestParam("inDiscount") boolean inDiscount,
             @RequestParam("discountPercentage") double discountPercentage,
             @RequestParam("image") MultipartFile image,
-            @RequestParam("stock") int stock) {
+            @RequestParam("stock") int stock,@RequestHeader("Authorization") String token) {
         ProductRequestDto productDto = new ProductRequestDto(name, description, brand, category, price,
                 stock, inDiscount, discountPercentage);
-        try {
-            ProductResponseDto newProduct = productService.createProduct(productDto, image);
-            return new ResponseEntity<>(newProduct, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        Boolean validate= userService.validateRole(token);
+        if(validate){
+            try {
+                ProductResponseDto newProduct = productService.createProduct(productDto, image);
+                return new ResponseEntity<>(newProduct, HttpStatus.CREATED);
+            } catch (Exception e) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }} else{
+            return new ResponseEntity<>(HttpStatus.LOCKED);
         }
     }
 
