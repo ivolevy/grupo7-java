@@ -4,6 +4,7 @@ import com.example.uade.tpo.dtos.request.DiscountRequestDto;
 import com.example.uade.tpo.dtos.request.DiscountUpdateRequestDto;
 import com.example.uade.tpo.dtos.response.DiscountResponseDto;
 import com.example.uade.tpo.service.DiscountService;
+import com.example.uade.tpo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,9 @@ public class DiscountController {
     @Autowired
     private DiscountService discountService;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping() //Get all discounts
     public ResponseEntity<List<DiscountResponseDto>> getAllDiscounts() {
         List<DiscountResponseDto> discounts = discountService.getAllDiscounts();
@@ -26,12 +30,18 @@ public class DiscountController {
     }
 
     @PostMapping ("/create")//Create discount
-    public ResponseEntity<?> createDiscount(@RequestBody DiscountRequestDto discount) {
-        DiscountResponseDto newDiscount = discountService.createDiscount(discount);
-        if(newDiscount == null) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+    public ResponseEntity<?> createDiscount(@RequestBody DiscountRequestDto discount,@RequestHeader("Authorization") String token) {
+        boolean validate = userService.validateRole(token);
+        if(validate){
+            DiscountResponseDto newDiscount = discountService.createDiscount(discount);
+            if(newDiscount == null) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
+
+            return new ResponseEntity<>(newDiscount, HttpStatus.CREATED);}
+        else{
+            return new ResponseEntity<>(HttpStatus.LOCKED);
         }
-        return new ResponseEntity<>(newDiscount, HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{discountId}") //Update discount
