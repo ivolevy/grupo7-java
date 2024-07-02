@@ -31,6 +31,12 @@ public class OrderController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @GetMapping("/userOrders")
+    public ResponseEntity <List<OrderResponseDto>> getUserOrders(@RequestHeader("Authorization") String token){
+        List<OrderResponseDto> userOrders= orderService.getUserOrders(token);
+        return new ResponseEntity<>(userOrders,HttpStatus.OK);
+    }
+
     @PostMapping //Create order from cart
     public ResponseEntity<OrderResponseDto> createOrder(@RequestBody OrderRequestDto order) {
         OrderResponseDto newOrder = orderService.createOrder(order);

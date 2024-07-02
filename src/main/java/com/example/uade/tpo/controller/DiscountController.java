@@ -35,6 +35,7 @@ public class DiscountController {
 
     }
 
+
     @PostMapping ("/create")//Create discount
     public ResponseEntity<?> createDiscount(@RequestBody DiscountRequestDto discount,@RequestHeader("Authorization") String token) {
         boolean validate = userService.validateRole(token);
