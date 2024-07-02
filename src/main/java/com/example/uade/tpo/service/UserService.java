@@ -45,6 +45,19 @@ public class UserService {
         return Mapper.convertToUserResponseDto(user);
     }
 
+    public Boolean validateRole(String token) {
+        String email = getEmailFromToken(token);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con email: " + email));
+        Role rol = user.getRole();
+        if(rol.equals(Role.ROLE_ADMIN)){
+            return Boolean.TRUE;
+        }else{
+            return Boolean.FALSE;
+        }
+    }
+
+
     private String getEmailFromToken(String token) {
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);

@@ -18,11 +18,21 @@ public class ProductService {
     @Autowired
     private IProductRepository productRepository;
 
+    @Autowired
+    private UserService userService;
 
     public List<ProductResponseDto> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return products.stream().map(Mapper::convertToProductResponseDto).collect(Collectors.toList());
-    }
+            List<Product> products = productRepository.findAll();
+            return products.stream().map(Mapper::convertToProductResponseDto).collect(Collectors.toList());
+        }
+    public List<ProductResponseDto> getAllProductsAdmin(String token) {
+        Boolean autorizado = userService.validateRole(token);
+        if (autorizado) {
+            List<Product> products = productRepository.findAll();
+            return products.stream().map(Mapper::convertToProductResponseDto).collect(Collectors.toList());
+        }else{
+            return null;
+    }}
 
     public ProductResponseDto getProductById(Long productId) throws Exception {
         Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Producto no encontrado con id: "+ productId));

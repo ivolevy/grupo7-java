@@ -18,9 +18,29 @@ public class  ProductController {
     @Autowired
     private ProductService productService;
 
+
     @GetMapping
     public ResponseEntity<List<ProductResponseDto>> getAllProducts() {
+
+
         List<ProductResponseDto> products = productService.getAllProducts();
+
+        if(products==null){
+            return new ResponseEntity<>(products,HttpStatus.LOCKED);
+        }
+
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+    @GetMapping("/admin")
+    public ResponseEntity<List<ProductResponseDto>> getAllProductsAdmin(@RequestHeader("Authorization") String token) {
+
+
+        List<ProductResponseDto> products = productService.getAllProductsAdmin(token);
+
+        if(products==null){
+            return new ResponseEntity<>(products,HttpStatus.LOCKED);
+        }
+
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
