@@ -23,14 +23,19 @@ public class JwtService {
     private long jwtExpiration;
 
     public String generateToken(UserDetails userDetails) {
-        return buildToken(userDetails, jwtExpiration);
+        if ( userDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")) ) {
+            return buildToken(userDetails.getUsername(), "ADMIN", jwtExpiration);
+        } else {
+            return buildToken(userDetails.getUsername(), "USER", jwtExpiration);
+        }
     }
 
-    private String buildToken(UserDetails userDetails, long expiration) {
+    private String buildToken(String username, String role, long expiration) {
         return Jwts.builder()
-                .subject(userDetails.getUsername())
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .setSubject(username)
+                .claim("role", role)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSecretKey())
                 .compact();
     }
