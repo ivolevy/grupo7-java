@@ -35,6 +35,23 @@ public class UserController {
         }
     }
 
+
+    @GetMapping("/currentUser")
+    public ResponseEntity<?> getCurrentUserFromToken(@RequestHeader("Authorization") String token) {
+        try {
+            UserResponseDto userData = userService.getCurrentUserFromToken(token);
+            if (userData != null) {
+                return ResponseEntity.ok(userData);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token inválido");
+        }
+    }
+
+
+
     @DeleteMapping("/delete/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
         if (userService.deleteUser(userId)) {

@@ -6,9 +6,16 @@ import com.example.uade.tpo.dtos.response.UserResponseDto;
 import com.example.uade.tpo.entity.Role;
 import com.example.uade.tpo.entity.User;
 import com.example.uade.tpo.repository.IUserRepository;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,8 +26,37 @@ public class UserService {
     @Autowired
     private IUserRepository userRepository;
 
+    @Value("${application.security.jwt.secretKey}")
+    private String jwtSecret;
+
+    private SecretKey getSigningKey() {
+        byte[] keyBytes = jwtSecret.getBytes(StandardCharsets.UTF_8);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
     public List<UserResponseDto> getUsers() {
         return userRepository.findAll().stream().map(Mapper::convertToUserResponseDto).collect(Collectors.toList());
+    }
+
+    public UserResponseDto getCurrentUserFromToken(String token) {
+        String email = getEmailFromToken(token);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con email: " + email));
+        return Mapper.convertToUserResponseDto(user);
+    }
+
+    private String getEmailFromToken(String token) {
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
+        Claims claims = Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        return claims.getSubject();
     }
 
     public boolean deleteUser(Long userId) {
