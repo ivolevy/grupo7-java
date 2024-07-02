@@ -1,16 +1,15 @@
 package com.example.uade.tpo.controller;
 
-import java.util.List;
-
+import com.example.uade.tpo.dtos.request.ProductRequestDto;
+import com.example.uade.tpo.dtos.response.ProductResponseDto;
+import com.example.uade.tpo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.example.uade.tpo.dtos.request.ProductRequestDto;
-import com.example.uade.tpo.dtos.response.ProductResponseDto;
-import com.example.uade.tpo.service.ProductService;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 
 @RestController
@@ -23,6 +22,16 @@ public class  ProductController {
     public ResponseEntity<List<ProductResponseDto>> getAllProducts() {
         List<ProductResponseDto> products = productService.getAllProducts();
         return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductResponseDto> getProductById(@PathVariable long productId){
+        try{
+            ProductResponseDto product = productService.getProductById(productId);
+            return new ResponseEntity<>(product,HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping("/create")
