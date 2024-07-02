@@ -3,15 +3,21 @@ package com.example.uade.tpo.service;
 import com.example.uade.tpo.Utils.Mapper;
 import com.example.uade.tpo.dtos.request.OrderRequestDto;
 import com.example.uade.tpo.dtos.response.OrderResponseDto;
-import com.example.uade.tpo.entity.*;
-import com.example.uade.tpo.repository.*;
+import com.example.uade.tpo.entity.Order;
+import com.example.uade.tpo.entity.OrderItem;
+import com.example.uade.tpo.entity.Product;
+import com.example.uade.tpo.entity.User;
+import com.example.uade.tpo.repository.IOrderItemRepository;
+import com.example.uade.tpo.repository.IOrderRepository;
+import com.example.uade.tpo.repository.IProductRepository;
+import com.example.uade.tpo.repository.IUserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,6 +25,9 @@ public class OrderService {
 
     @Autowired
     private IOrderRepository orderRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private IUserRepository userRepository;
@@ -38,6 +47,16 @@ public class OrderService {
     public List<OrderResponseDto> getAllOrders() {
         return orderRepository.findAll().stream().map(Mapper::convertToOrderResponseDto)
                 .collect(Collectors.toList());
+    }
+
+    public List<OrderResponseDto> getUserOrders(String token){
+        Long userId = userService.getCurrentUserFromToken(token).getUserId();
+        System.out.println(userId);
+        List<OrderResponseDto> order = orderRepository.findAllByUserId(userId).stream().map(Mapper::convertToOrderResponseDto).collect(Collectors.toList());
+        System.out.println(order);
+        return order;
+        
+
     }
 
     @Transactional
@@ -79,6 +98,8 @@ public class OrderService {
 
         return Mapper.convertToOrderResponseDto(savedOrder);
     }
+
+
 
     public Boolean deleteOrder(Long orderId) {
         if (orderRepository.existsById(orderId)) {
