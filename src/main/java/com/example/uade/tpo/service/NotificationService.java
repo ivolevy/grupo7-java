@@ -8,10 +8,8 @@ import org.springframework.stereotype.Service;
 public class NotificationService {
     @Autowired
     private EmailService emailService;
-    @Autowired
-    private IUserRepository userRepository;
 
-    public void sendProblemMail(String problematica, String descripcion) {
-        emailService.sendEmail("trialmatch2024@gmail.com", "Problema: " + problematica, descripcion);
+    public void sendProblemMail(String problematica, String descripcion, String fullName) {
+        emailService.sendEmail("trialmatch2024@gmail.com", "Nombre: "+ fullName +"- Problema: " + problematica, descripcion);
     }
 }

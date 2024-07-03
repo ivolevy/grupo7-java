@@ -104,10 +104,8 @@ public class UserService {
         return false;
     }
 
-    public void contact(String subject, String message) {
-        System.out.println(message);
-        System.out.println(subject);
-        notificationService.sendProblemMail(subject, message);
+    public void contact(String subject, String message, String fullName) {
+        notificationService.sendProblemMail(subject, message, fullName);
     }
 
 }

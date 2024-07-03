@@ -56,10 +56,10 @@ public class UserController {
         }
     }
 
-    @PostMapping("/contact/{subject}/{message}")
-    public ResponseEntity<?> contact(@PathVariable String subject, @PathVariable String message) {
+    @PostMapping("/contact/{subject}/{message}/{fullName}")
+    public ResponseEntity<?> contact(@PathVariable String subject, @PathVariable String message, @PathVariable String fullName) {
         try {
-            userService.contact(subject, message);
+            userService.contact(subject, message, fullName);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al enviar el mensaje");
