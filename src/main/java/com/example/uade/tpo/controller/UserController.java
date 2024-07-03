@@ -56,6 +56,16 @@ public class UserController {
         }
     }
 
+    @PostMapping("/contact/{subject}/{message}")
+    public ResponseEntity<?> contact(@PathVariable String subject, @PathVariable String message) {
+        try {
+            userService.contact(subject, message);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al enviar el mensaje");
+        }
+    }
+
 
 
     @DeleteMapping("/delete/{userId}")

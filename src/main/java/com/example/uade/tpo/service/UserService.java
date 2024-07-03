@@ -26,6 +26,9 @@ public class UserService {
     @Autowired
     private IUserRepository userRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @Value("${application.security.jwt.secretKey}")
     private String jwtSecret;
 
@@ -52,10 +55,6 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con email: " + email));
         return(user);
     }
-
-
-
-
 
     public Boolean validateRole(String token) {
         String email = getEmailFromToken(token);
@@ -103,6 +102,12 @@ public class UserService {
             }
         }
         return false;
+    }
+
+    public void contact(String subject, String message) {
+        System.out.println(message);
+        System.out.println(subject);
+        notificationService.sendProblemMail(subject, message);
     }
 
 }
