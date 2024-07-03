@@ -11,4 +11,5 @@ import java.util.Optional;
 
 @Repository
 public interface IDiscountRepository extends JpaRepository<Discount, Long> {
+    Optional<Discount> findByCode(String code);
 }
