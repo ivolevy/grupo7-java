@@ -12,6 +12,5 @@ import java.util.List;
 @NoArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class OrderRequestDto {
-    Long userId;
     List<OrderItemRequestDto> orderItems;
 }

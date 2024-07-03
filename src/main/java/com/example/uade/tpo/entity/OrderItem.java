@@ -22,9 +22,10 @@ public class OrderItem {
     @JoinColumn(name = "order_id", nullable = false)
     @JsonBackReference
     private Order order;
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    @Column(nullable = false, unique = true)
+    private String name;
+    @Column(nullable = false)
+    private Double price;
     @Column(nullable = false)
     private Integer quantity;
     @Column(name = "unit_price", nullable = false)

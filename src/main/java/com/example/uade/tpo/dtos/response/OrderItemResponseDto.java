@@ -11,7 +11,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class OrderItemResponseDto {
     Long id;
-    Long productId;
     String productName;
     Integer quantity;
     Double price;

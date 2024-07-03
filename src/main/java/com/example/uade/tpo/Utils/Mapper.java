@@ -66,8 +66,7 @@ public class Mapper {
     public static OrderItemResponseDto convertToOrderItemResponseDto(OrderItem orderItem) {
         OrderItemResponseDto orderItemDto = new OrderItemResponseDto();
         orderItemDto.setId(orderItem.getId());
-        orderItemDto.setProductId(orderItem.getProduct().getId());
-        orderItemDto.setProductName(orderItem.getProduct().getName());
+        orderItemDto.setProductName(orderItem.getName());
         orderItemDto.setQuantity(orderItem.getQuantity());
         orderItemDto.setPrice(orderItem.getUnitPrice());
         return orderItemDto;

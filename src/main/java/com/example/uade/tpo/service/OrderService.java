@@ -51,23 +51,15 @@ public class OrderService {
 
     public List<OrderResponseDto> getUserOrders(String token){
         Long userId = userService.getCurrentUserFromToken(token).getUserId();
-        System.out.println(userId);
         List<OrderResponseDto> order = orderRepository.findAllByUserId(userId).stream().map(Mapper::convertToOrderResponseDto).collect(Collectors.toList());
-        System.out.println(order);
         return order;
-        
+
 
     }
 
     @Transactional
-    public OrderResponseDto createOrder(OrderRequestDto orderDto) {
-        Optional<User> userOptional = userRepository.findById(orderDto.getUserId());
-        if (userOptional.isEmpty()) {
-            throw new IllegalArgumentException("User not found");
-        }
-
-        User user = userOptional.get();
-
+    public OrderResponseDto createOrder(String token,OrderRequestDto orderDto) {
+        User user = userService.getCurrentUserFromTokenUser(token);
         Order order = new Order();
         order.setUser(user);
         order.setOrderDate(LocalDate.now());
@@ -79,9 +71,15 @@ public class OrderService {
             }
 
             Product product = productOptional.get();
+            product.setStock(product.getStock()-orderItemRequestDto.getQuantity());
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
-            orderItem.setProduct(product);
+            orderItem.setName(product.getName());
+            orderItem.setPrice(product.getPrice());
+            orderItem.setQuantity(orderItemRequestDto.getQuantity());
+            if(product.getStock()<=0){
+                throw new IllegalArgumentException("No hay stock");
+            }
             orderItem.setQuantity(orderItemRequestDto.getQuantity());
             orderItem.setUnitPrice(product.getPrice() * orderItemRequestDto.getQuantity());
 

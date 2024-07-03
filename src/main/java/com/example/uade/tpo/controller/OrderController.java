@@ -38,8 +38,8 @@ public class OrderController {
     }
 
     @PostMapping //Create order from cart
-    public ResponseEntity<OrderResponseDto> createOrder(@RequestBody OrderRequestDto order) {
-        OrderResponseDto newOrder = orderService.createOrder(order);
+    public ResponseEntity<OrderResponseDto> createOrder(@RequestHeader("Authorization") String token,@RequestBody OrderRequestDto order) {
+        OrderResponseDto newOrder = orderService.createOrder(token,order);
         if(newOrder == null){
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }

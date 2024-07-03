@@ -46,6 +46,17 @@ public class UserService {
         return Mapper.convertToUserResponseDto(user);
     }
 
+    public User getCurrentUserFromTokenUser(String token) {
+        String email = getEmailFromToken(token);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con email: " + email));
+        return(user);
+    }
+
+
+
+
+
     public Boolean validateRole(String token) {
         String email = getEmailFromToken(token);
         User user = userRepository.findByEmail(email)
