@@ -77,7 +77,7 @@ public class OrderService {
             orderItem.setName(product.getName());
             orderItem.setPrice(product.getPrice());
             orderItem.setQuantity(orderItemRequestDto.getQuantity());
-            if(product.getStock()<=0){
+            if(product.getStock()<0){
                 throw new IllegalArgumentException("No hay stock");
             }
             orderItem.setQuantity(orderItemRequestDto.getQuantity());
